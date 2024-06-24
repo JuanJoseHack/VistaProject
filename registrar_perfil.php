@@ -1,37 +1,38 @@
 <?php
 
-if($_SERVER["REQUEST_METHOD"]== "POST"){
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $curl = curl_init();
-    
+
     curl_setopt_array($curl, array(
-      CURLOPT_URL => 'ti.app.informaticapp.com:4176/api-ti/perfiles',
-      CURLOPT_RETURNTRANSFER => true,
-      CURLOPT_ENCODING => '',
-      CURLOPT_MAXREDIRS => 10,
-      CURLOPT_TIMEOUT => 0,
-      CURLOPT_FOLLOWLOCATION => true,
-      CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-      CURLOPT_CUSTOMREQUEST => 'POST',
-      CURLOPT_POSTFIELDS =>'{
-            "nombre": "'.$_POST['nombre'].'",
+        CURLOPT_URL => 'ti.app.informaticapp.com:4176/api-ti/perfiles',
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => '',
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 0,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => 'POST',
+        CURLOPT_POSTFIELDS => '{
+            "nombre": "' . $_POST['nombre'] . '",
             "estado": 1
         }',
-      CURLOPT_HTTPHEADER => array(
-        'Content-Type: application/json'
-      ),
+        CURLOPT_HTTPHEADER => array(
+            'Content-Type: application/json'
+        ),
     ));
-    
+
     $response = curl_exec($curl);
-    
+
     curl_close($curl);
     echo $response;
     header("Location: perfiles.php");
-} 
+}
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Consumo de Web Services</title>
@@ -57,6 +58,7 @@ if($_SERVER["REQUEST_METHOD"]== "POST"){
     <!-- Font Awesome JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/js/all.min.js" crossorigin="anonymous"></script>
 </head>
+
 <body class="sb-nav-fixed">
     <!-- Navbar -->
     <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
@@ -83,7 +85,7 @@ if($_SERVER["REQUEST_METHOD"]== "POST"){
                 </div>
             </li>
         </ul>
-    </nav> 
+    </nav>
 
     <div id="layoutSidenav">
         <div id="layoutSidenav_nav">
@@ -217,7 +219,7 @@ if($_SERVER["REQUEST_METHOD"]== "POST"){
                 </div>
             </nav>
         </div>
-        
+
         <div id="layoutSidenav_content">
             <div class="container">
                 <h1 class="text-center mb-4 mt-4">Registrar Perfiles</h1>
@@ -233,7 +235,7 @@ if($_SERVER["REQUEST_METHOD"]== "POST"){
             </div>
 
             <!-- Footer -->
-            <footer class="py-4 bg-light mt-auto">
+            <<footer class="py-4 bg-light mt-auto">
                 <div class="container-fluid">
                     <div class="d-flex align-items-center justify-content-between small">
                         <div class="text-muted">Copyright &copy; E-Marke Pro 2024</div>
@@ -244,7 +246,7 @@ if($_SERVER["REQUEST_METHOD"]== "POST"){
                         </div>
                     </div>
                 </div>
-            </footer>
+                </footer>
         </div>
     </div>
 
@@ -253,4 +255,5 @@ if($_SERVER["REQUEST_METHOD"]== "POST"){
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
 </body>
+
 </html>

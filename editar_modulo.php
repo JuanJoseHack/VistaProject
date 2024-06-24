@@ -1,22 +1,49 @@
 <?php
 
-$curl = curl_init();
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-curl_setopt_array($curl, array(
-    CURLOPT_URL => 'http://ti.app.informaticapp.com:4176/api-ti/accesos',
-    CURLOPT_RETURNTRANSFER => true,
-    CURLOPT_ENCODING => '',
-    CURLOPT_MAXREDIRS => 10,
-    CURLOPT_TIMEOUT => 0,
-    CURLOPT_FOLLOWLOCATION => true,
-    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-    CURLOPT_CUSTOMREQUEST => 'GET',
-));
+    $curl = curl_init();
 
-$response = curl_exec($curl);
+    curl_setopt_array($curl, array(
+        CURLOPT_URL => 'http://ti.app.informaticapp.com:4176/api-ti/modulos/',
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => '',
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 0,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => 'PUT',
+        CURLOPT_POSTFIELDS => '{
+            "id":' . $_POST['id'] . ',
+            "nombre": "' . $_POST['nombre'] . '",
+            "estado": 1
+    }',
+        CURLOPT_HTTPHEADER => array(
+            'Content-Type: application/json'
+        ),
+    ));
 
-curl_close($curl);
-$data = json_decode($response);
+    $response = curl_exec($curl);
+    curl_close($curl);
+    header("Location: modulos.php");
+} else {
+
+    $curl = curl_init();
+    curl_setopt_array($curl, array(
+        CURLOPT_URL => 'ti.app.informaticapp.com:4176/api-ti/modulos/' . $_GET['id'],
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => '',
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 0,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => 'GET',
+    ));
+
+    $response = curl_exec($curl);
+    curl_close($curl);
+    $data = json_decode($response);
+}
 
 ?>
 
@@ -118,9 +145,9 @@ $data = json_decode($response);
                                 </a>
                                 <div class="collapse" id="pagesCollapseAuth" aria-labelledby="headingOne" data-parent="#sidenavAccordionPages">
                                     <nav class="sb-sidenav-menu-nested nav">
-                                        <a class="nav-link" href="login.html">Registrar compra</a>
-                                        <a class="nav-link" href="register.html">Compras</a>
-                                        <a class="nav-link" href="register.html">Detalles Compras</a>
+                                        <a class="nav-link" href="pages/compras.php">Registar compra</a>
+                                        <a class="nav-link" href="#">Compras</a>
+                                        <a class="nav-link" href="#">Detalles Compras</a>
                                     </nav>
                                 </div>
                                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#pagesCollapseError" aria-expanded="false" aria-controls="pagesCollapseError">
@@ -212,34 +239,15 @@ $data = json_decode($response);
 
         <div id="layoutSidenav_content">
 
-            <div class="container col-xl-12">
-                <h1 class="mb-5 mt-4">Accesos</h1>
-                <a href="registrar.php" class="btn btn-primary mb-3">Registrar Acceso</a>
-                <table class="table">
-                    <thead class="thead-light">
-                        <tr>
-                            <th scope="col">Perfiles</th>
-                            <th scope="col">Modulos</th>
-                            <th scope="col" colspan="2">Operaciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
+            <div class="container">
+                <h1 class="text-center">Actulizar Modulo</h1>
+                <form method="post" class="col-xl-8 offset-2">
+                    <input type="hidden" name="id" value="<?= $data->id; ?>">
+                    <input type="text" name="nombre" class="form-control" value="<?= $data->nombre; ?>">
+                    <button type="submit" class="btn btn-success">Guardar</button>
+                    <a href="modulos.php" class="btn btn-danger">Cancelar</a>
+                </form>
 
-                        <?php foreach ($data as $item) : ?>
-                            <tr>
-                                <td>
-                                    <?php echo isset($item->perfil->nombre) ? $item->perfil->nombre : "Perfil no disponible"; ?>
-                                </td>
-                                <td>
-                                    <?php echo isset($item->modulo->nombre) ? $item->modulo->nombre : "Módulo no disponible"; ?>
-                                </td>
-                                <td><a href="editar.php?id=<?= $item->id ?>" class="btn btn-warning">Editar</a></td>
-                                <td><a href="eliminar.php?id=<?= $item->id ?>" class="btn btn-danger">Eliminar</a></td>
-                            </tr>
-                        <?php endforeach; ?>
-
-                    </tbody>
-                </table>
             </div>
 
             <!-- Footer -->
