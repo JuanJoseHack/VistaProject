@@ -210,7 +210,8 @@ $data = json_decode($response);
         
         <div id="layoutSidenav_content">
             <div class="container col-xl-12">
-                <h1 class="text-center mb-5 mt-4">Lista de Usuarios</h1>
+                <h1 class="mb-5 mt-4">Usuarios</h1>
+                <a href="registrar.php" class="btn btn-primary mb-3">Registrar Usuario</a>
                 <table class="table ">
                     <thead class="thead-light">
                         <tr>
@@ -246,7 +247,6 @@ $data = json_decode($response);
                         <?php endforeach ?>
                     </tbody>
                 </table>
-                <a href="registrar.php" class="btn btn-primary">Registrar Usuario</a>
             </div>
 
             <!-- Footer -->
