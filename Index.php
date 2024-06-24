@@ -88,9 +88,9 @@
                                 <div class="collapse" id="pagesCollapseAuth" aria-labelledby="headingOne"
                                     data-parent="#sidenavAccordionPages">
                                     <nav class="sb-sidenav-menu-nested nav">
-                                        <a class="nav-link" href="login.html">Registar compra</a>
-                                        <a class="nav-link" href="register.html">Compras</a>
-                                        <a class="nav-link" href="register.html">Detalles Compras</a>
+                                        <a class="nav-link" href="pages/compras.php">Registar compra</a>
+                                        <a class="nav-link" href="#">Compras</a>
+                                        <a class="nav-link" href="#">Detalles Compras</a>
                                     </nav>
                                 </div>
                                 <a class="nav-link collapsed" href="#" data-toggle="collapse"
