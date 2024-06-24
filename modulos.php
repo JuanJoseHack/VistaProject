@@ -3,14 +3,14 @@
 $curl = curl_init();
 
 curl_setopt_array($curl, array(
-  CURLOPT_URL => 'ti.app.informaticapp.com:4176/api-ti/usuarios',
-  CURLOPT_RETURNTRANSFER => true,
-  CURLOPT_ENCODING => '',
-  CURLOPT_MAXREDIRS => 10,
-  CURLOPT_TIMEOUT => 0,
-  CURLOPT_FOLLOWLOCATION => true,
-  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-  CURLOPT_CUSTOMREQUEST => 'GET',
+    CURLOPT_URL => 'ti.app.informaticapp.com:4176/api-ti/modulos',
+    CURLOPT_RETURNTRANSFER => true,
+    CURLOPT_ENCODING => '',
+    CURLOPT_MAXREDIRS => 10,
+    CURLOPT_TIMEOUT => 0,
+    CURLOPT_FOLLOWLOCATION => true,
+    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+    CURLOPT_CUSTOMREQUEST => 'GET',
 ));
 
 $response = curl_exec($curl);
@@ -73,7 +73,7 @@ $data = json_decode($response);
                 </div>
             </li>
         </ul>
-    </nav> 
+    </nav>
 
     <div id="layoutSidenav">
         <div id="layoutSidenav_nav">
@@ -207,47 +207,29 @@ $data = json_decode($response);
                 </div>
             </nav>
         </div>
-        
-        <div id="layoutSidenav_content">
 
+        <div id="layoutSidenav_content">
             <div class="container col-xl-12">
-                <h1 class="mb-5 mt-4">Usuarios</h1>
-                <a href="registrar.php" class="btn btn-primary mb-3">Registrar Usuario</a>
-                <table class="table ">
+                <h1 class="mb-5 mt-4">Modulos</h1>
+                <a href="registrar_modulo.php" class="btn btn-primary mb-3">Registrar Modulo</a>
+                <table class="table">
                     <thead class="thead-light">
                         <tr>
-                            <th scope="col">Usuario</th>
-                            <th scope="col">Contraseña</th>
-                            <th scope="col">Nombres</th>
-                            <th scope="col">Apellidos</th>
-                            <th scope="col">Teléfono</th>
-                            <th scope="col">Email</th>
-                            <th scope="col">Edad</th>
-                            <th scope="col">Foto</th>
-                            <th scope="col">Sucursal</th>
-                            <th scope="col">Perfil</th>
+                            <th scope="col">Nombre</th>
                             <th scope="col" colspan="2">Operaciones</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php foreach($data as $item): ?>
                             <tr>
-                                <td><?php print $item->usuario ?></td>
-                                <td><?php print $item->password ?></td>
-                                <td><?php print $item->nombres ?></td>
-                                <td><?php print $item->apellidos ?></td>
-                                <td><?php print $item->telefono ?></td>
-                                <td><?php print $item->email ?></td>
-                                <td><?php print $item->edad ?></td>
-                                <td><?php print $item->foto ?></td>
-                                <td><?php echo isset($item->sucursal->nombre) ? $item->sucursal->nombre : "Perfil no disponible"; ?></td>
-                                <td><?php echo isset($item->perfil->nombre) ? $item->perfil->nombre : "Perfil no disponible"; ?></td>
-                                <td><a href="editar.php?id=<?= $item->id ?>" class="btn btn-warning">Editar</a></td>
-                                <td><a href="eliminar.php?id=<?= $item->id ?>" class="btn btn-danger">Eliminar</a></td>
+                                <td><?php print $item->nombre ?></td>
+                                <td><a href="registrar_modulo.php?id=<?= $item->id ?>" class="btn btn-warning">Editar</a></td>
+                                <td><a href="eliminar_modulo.php?id=<?= $item->id ?>" class="btn btn-danger">Eliminar</a></td>
                             </tr>
                         <?php endforeach ?>
                     </tbody>
                 </table>
+                
             </div>
 
             <!-- Footer -->

@@ -165,9 +165,9 @@
                             data-parent="#sidenavAccordion">
                             <nav class="sb-sidenav-menu-nested nav">
                                 <a class="nav-link" href="usuarios.php">Usuarios</a>
-                                <a class="nav-link" href="layout-sidenav-light.html">Perfiles</a>
-                                <a class="nav-link" href="layout-static.html">Accesos</a>
-                                <a class="nav-link" href="layout-sidenav-light.html">Modulos</a>
+                                <a class="nav-link" href="perfiles.php">Perfiles</a>
+                                <a class="nav-link" href="accesos.php">Accesos</a>
+                                <a class="nav-link" href="modulos.php">Modulos</a>
                             </nav>
                         </div>
 
