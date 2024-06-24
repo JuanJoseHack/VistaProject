@@ -1,24 +1,3 @@
-<?php
-
-$curl = curl_init();
-
-curl_setopt_array($curl, array(
-  CURLOPT_URL => 'ti.app.informaticapp.com:4170/api-ti/usuarios',
-  CURLOPT_RETURNTRANSFER => true,
-  CURLOPT_ENCODING => '',
-  CURLOPT_MAXREDIRS => 10,
-  CURLOPT_TIMEOUT => 0,
-  CURLOPT_FOLLOWLOCATION => true,
-  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-  CURLOPT_CUSTOMREQUEST => 'GET',
-));
-
-$response = curl_exec($curl);
-
-curl_close($curl);
-$data = json_decode($response);
-
-?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -39,7 +18,7 @@ $data = json_decode($response);
     <title>Dashboard</title>
 
     <!-- Custom CSS -->
-    <link href="Css/Style.css" rel="stylesheet" />
+    <link href="../Css/Style.css" rel="stylesheet" />
 
     <!-- DataTables CSS -->
     <link href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css" rel="stylesheet" crossorigin="anonymous" />
@@ -210,43 +189,22 @@ $data = json_decode($response);
         
         <div id="layoutSidenav_content">
             <div class="container col-xl-12">
-                <h1 class="text-center mb-5 mt-4">Lista de Usuarios</h1>
+                <h1 class="text-center mb-5 mt-4">Lista de Compras</h1>
+                <a href="registrar.php" class="btn btn-primary" data-toggle="modal" data-target="#createModal">Registrar compra</a>
                 <table class="table ">
                     <thead class="thead-light">
-                        <tr>
-                            <th scope="col">Usuario</th>
-                            <th scope="col">Contraseña</th>
-                            <th scope="col">Nombres</th>
-                            <th scope="col">Apellidos</th>
-                            <th scope="col">Teléfono</th>
-                            <th scope="col">Email</th>
-                            <th scope="col">Edad</th>
-                            <th scope="col">Foto</th>
-                            <th scope="col">Sucursal</th>
-                            <th scope="col">Perfil</th>
-                            <th scope="col" colspan="2">Operaciones</th>
-                        </tr>
+                    <tr>
+                        <th>ID</th>
+                        <th>Código Remisión</th>
+                        <th>Fecha</th>
+                        <th>Devolución</th>
+                        <th>ID Proveedor</th>
+                        <th>Acciones</th>
+                    </tr>
                     </thead>
-                    <tbody>
-                        <?php foreach($data as $item): ?>
-                            <tr>
-                                <td><?php print $item->usuario ?></td>
-                                <td><?php print $item->password ?></td>
-                                <td><?php print $item->nombres ?></td>
-                                <td><?php print $item->apellidos ?></td>
-                                <td><?php print $item->telefono ?></td>
-                                <td><?php print $item->email ?></td>
-                                <td><?php print $item->edad ?></td>
-                                <td><?php print $item->foto ?></td>
-                                <td><?php echo isset($item->sucursal->nombre) ? $item->sucursal->nombre : "Perfil no disponible"; ?></td>
-                                <td><?php echo isset($item->perfil->nombre) ? $item->perfil->nombre : "Perfil no disponible"; ?></td>
-                                <td><a href="editar.php?id=<?= $item->id ?>" class="btn btn-warning">Editar</a></td>
-                                <td><a href="eliminar.php?id=<?= $item->id ?>" class="btn btn-danger">Eliminar</a></td>
-                            </tr>
-                        <?php endforeach ?>
+                    <tbody id="resultdata">
                     </tbody>
                 </table>
-                <a href="registrar.php" class="btn btn-primary">Registrar Usuario</a>
             </div>
 
             <!-- Footer -->
@@ -265,9 +223,82 @@ $data = json_decode($response);
         </div>
     </div>
 
+     <!-- Modal para editar compra -->
+     <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editModalLabel">Editar Compra</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="editForm">
+                        <input type="hidden" id="edit_id" name="edit_id">
+                        <div class="form-group">
+                            <label for="edit_codigo_remision">Código Remisión</label>
+                            <input type="text" class="form-control" id="edit_codigo_remision" name="edit_codigo_remision" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit_fecha">Fecha</label>
+                            <input type="date" class="form-control" id="edit_fecha" name="edit_fecha" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit_devolucion">Devolución</label>
+                            <input type="text" class="form-control" id="edit_devolucion" name="edit_devolucion" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit_id_proveedor">ID Proveedor</label>
+                            <input type="text" class="form-control" id="edit_id_proveedor" name="edit_id_proveedor" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para crear nueva compra -->
+    <div class="modal fade" id="createModal" tabindex="-1" role="dialog" aria-labelledby="createModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="createModalLabel">Crear Nueva Compra</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="createForm">
+                        <div class="form-group">
+                            <label for="codigo_remision">Código Remisión</label>
+                            <input type="text" class="form-control" id="codigo_remision" name="codigo_remision" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="fecha">Fecha</label>
+                            <input type="date" class="form-control" id="fecha" name="fecha" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="devolucion">Devolución</label>
+                            <input type="text" class="form-control" id="devolucion" name="devolucion" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="id_proveedor">ID Proveedor</label>
+                            <input type="text" class="form-control" id="id_proveedor" name="id_proveedor" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Guardar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- JS, Popper.js, and jQuery -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+    <script src="js/compras.js"></script>
 </body>
 </html>
