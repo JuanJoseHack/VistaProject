@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="description" content="" />
     <meta name="author" content="" />
-    <title>Dashboard - Admin</title>
+    <title>Dashboard</title>
     <link href="Css/Style.css" rel="stylesheet" />
     <link href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css" rel="stylesheet"
         crossorigin="anonymous" />
@@ -154,6 +154,23 @@
                             </nav>
                         </div>
 
+                        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#seguridad"
+                            aria-expanded="false" aria-controls="collapseLayouts">
+                            <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
+                            Seguridad
+                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                        </a>
+
+                        <div class="collapse" id="seguridad" aria-labelledby="headingOne"
+                            data-parent="#sidenavAccordion">
+                            <nav class="sb-sidenav-menu-nested nav">
+                                <a class="nav-link" href="usuarios.php">Usuarios</a>
+                                <a class="nav-link" href="layout-sidenav-light.html">Perfiles</a>
+                                <a class="nav-link" href="layout-static.html">Accesos</a>
+                                <a class="nav-link" href="layout-sidenav-light.html">Modulos</a>
+                            </nav>
+                        </div>
+
                         <div class="sb-sidenav-menu-heading">Complementos</div>
                         <a class="nav-link" href="charts.html">
                             <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
@@ -166,8 +183,7 @@
                     </div>
                 </div>
                 <div class="sb-sidenav-footer">
-                    <div class="small">Logged in as:</div>
-                    Administrador
+                    <div class="small">BIENVENIDO</div>
                 </div>
             </nav>
         </div>
@@ -321,7 +337,7 @@
             <footer class="py-4 bg-light mt-auto">
                 <div class="container-fluid">
                     <div class="d-flex align-items-center justify-content-between small">
-                        <div class="text-muted">Copyright &copy; Yys 2024</div>
+                        <div class="text-muted">Copyright &copy; E-Marke Pro 2024</div>
                         <div>
                             <a href="#">Privacy Policy</a>
                             &middot;
