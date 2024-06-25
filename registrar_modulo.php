@@ -79,7 +79,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <a class="dropdown-item" href="#">Configuración</a>
                     <a class="dropdown-item" href="#">Perfiles</a>
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="login.html">Cerrar Sesión</a>
+                    <a class="dropdown-item" href="login.php">Cerrar Sesión</a>
                 </div>
             </li>
         </ul>
@@ -219,7 +219,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </div>
 
         <div id="layoutSidenav_content">
-            <div class="container">
+            <div class="container col-xl-12">
                 <h1 class="text-center mb-4 mt-4">Registrar Modulos</h1>
                 <div class="container">
                     <form method="post" class="col-xl-5 offset-4 border p-3">

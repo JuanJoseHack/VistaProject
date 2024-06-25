@@ -71,7 +71,7 @@ $data = json_decode($response);
                     <a class="dropdown-item" href="#">Configuración</a>
                     <a class="dropdown-item" href="#">Perfiles</a>
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="login.html">Cerrar Sesión</a>
+                    <a class="dropdown-item" href="login.php">Cerrar Sesión</a>
                 </div>
             </li>
         </ul>

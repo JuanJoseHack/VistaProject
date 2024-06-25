@@ -71,7 +71,7 @@ $data = json_decode($response);
                     <a class="dropdown-item" href="#">Configuración</a>
                     <a class="dropdown-item" href="#">Perfiles</a>
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="login.html">Cerrar Sesión</a>
+                    <a class="dropdown-item" href="login.php">Cerrar Sesión</a>
                 </div>
             </li>
         </ul>
@@ -214,7 +214,7 @@ $data = json_decode($response);
 
             <div class="container col-xl-12">
                 <h1 class="mb-5 mt-4">Usuarios</h1>
-                <a href="registrar.php" class="btn btn-primary mb-3">Registrar Usuario</a>
+                <a href="registrar_usuario.php" class="btn btn-primary mb-3">Registrar Usuario</a>
                 <table class="table ">
                     <thead class="thead-light">
                         <tr>
@@ -244,8 +244,8 @@ $data = json_decode($response);
                                 <td><?php print $item->foto ?></td>
                                 <td><?php echo isset($item->sucursal->nombre) ? $item->sucursal->nombre : "Perfil no disponible"; ?></td>
                                 <td><?php echo isset($item->perfil->nombre) ? $item->perfil->nombre : "Perfil no disponible"; ?></td>
-                                <td><a href="editar.php?id=<?= $item->id ?>" class="btn btn-warning">Editar</a></td>
-                                <td><a href="eliminar.php?id=<?= $item->id ?>" class="btn btn-danger">Eliminar</a></td>
+                                <td><a href="editar.php?id=<?= $item->id?>" class="btn btn-warning">Editar</a></td>
+                                <td><a href="eliminar_usuario.php?id=<?= $item->id?>" class="btn btn-danger">Eliminar</a></td>
                             </tr>
                         <?php endforeach ?>
                     </tbody>

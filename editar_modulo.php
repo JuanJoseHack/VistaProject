@@ -98,7 +98,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <a class="dropdown-item" href="#">Configuración</a>
                     <a class="dropdown-item" href="#">Perfiles</a>
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="login.html">Cerrar Sesión</a>
+                    <a class="dropdown-item" href="login.php">Cerrar Sesión</a>
                 </div>
             </li>
         </ul>
@@ -239,7 +239,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         <div id="layoutSidenav_content">
 
-            <div class="container">
+            <div class="container col-xl-12">
                 <h1 class="text-center">Actulizar Modulo</h1>
                 <form method="post" class="col-xl-8 offset-2">
                     <input type="hidden" name="id" value="<?= $data->id; ?>">
