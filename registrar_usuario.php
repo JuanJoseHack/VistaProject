@@ -1,72 +1,3 @@
-<?php
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Mostrar todos los datos recibidos para depuración
-    echo '<pre>';
-    echo "Datos recibidos del formulario:\n";
-    print_r($_POST);
-    echo '</pre>';
-
-    // Verifica que todas las variables POST estén definidas y no estén vacías
-    $required_fields = ['usuario', 'password', 'nombres', 'apellidos', 'telefono', 'email', 'edad', 'foto', 'sucursal', 'perfil'];
-    foreach ($required_fields as $field) {
-        if (!isset($_POST[$field]) || empty($_POST[$field])) {
-            die("El campo $field es obligatorio y no está definido.");
-        }
-    }
-
-    $payload = json_encode(array(
-        "usuario" => $_POST['usuario'],
-        "password" => $_POST['password'],
-        "nombres" => $_POST['nombres'],
-        "apellidos" => $_POST['apellidos'],
-        "telefono" => $_POST['telefono'],
-        "email" => $_POST['email'],
-        "edad" => $_POST['edad'],
-        "foto" => $_POST['foto'],
-        "sucursal" => array("id" => (int)$_POST['sucursal']),
-        "perfil" => array("id" => (int)$_POST['perfil']),
-        "estado" => 1
-    ));
-
-    // Mostrar los datos que se están enviando
-    echo '<pre>';
-    echo "Datos enviados:\n";
-    echo htmlentities($payload);
-    echo '</pre>';
-
-    $curl = curl_init();
-    curl_setopt_array($curl, array(
-        CURLOPT_URL => 'http://ti.app.informaticapp.com:4176/api-ti/usuarios',
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_ENCODING => '',
-        CURLOPT_MAXREDIRS => 10,
-        CURLOPT_TIMEOUT => 0,
-        CURLOPT_FOLLOWLOCATION => true,
-        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-        CURLOPT_CUSTOMREQUEST => 'POST',
-        CURLOPT_POSTFIELDS => $payload,
-        CURLOPT_HTTPHEADER => array(
-            'Content-Type: application/json'
-        ),
-    ));
-
-    $response = curl_exec($curl);
-
-    // Mostrar la respuesta de la API
-    echo '<pre>';
-    echo "Respuesta de la API:\n";
-    echo htmlentities($response);
-    echo '</pre>';
-
-    curl_close($curl);
-
-    // Descomentar para redirigir después de depurar
-    // header("Location: usuarios.php");
-    // exit();
-}
-?>
-
-
 
 
 <!DOCTYPE html>
@@ -263,7 +194,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             <<div class="container ">
                 <h2>Formulario de Usuario</h2>
-                <form method="POST" action="">
+                <form method="POST" action="registrar_usuario.php">
                     <!-- Otros campos de tu formulario -->
                     <div class="form-group">
                         <label for="usuario">Usuario:</label>
@@ -297,13 +228,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <label for="foto">Foto:</label>
                         <input type="text" class="form-control" name="foto" id="foto" required>
                     </div>
+
                     <div class="form-group">
                         <label for="sucursal">Sucursal:</label>
                         <select name="sucursal" class="form-control" required>
                             <?php
                             $curl = curl_init();
                             curl_setopt_array($curl, array(
-                                CURLOPT_URL => 'http://ti.app.informaticapp.com:4176/api-ti/sucursales',
+                                CURLOPT_URL => 'http://ti.app.informaticapp.com:4179/api-ti/sucursales',
                                 CURLOPT_RETURNTRANSFER => true,
                                 CURLOPT_ENCODING => '',
                                 CURLOPT_MAXREDIRS => 10,
@@ -327,13 +259,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             ?>
                         </select>
                     </div>
+
                     <div class="form-group">
                         <label for="perfil">Perfil:</label>
                         <select name="perfil" class="form-control" required>
                             <?php
                             $curl = curl_init();
                             curl_setopt_array($curl, array(
-                                CURLOPT_URL => 'http://ti.app.informaticapp.com:4176/api-ti/perfiles',
+                                CURLOPT_URL => 'http://ti.app.informaticapp.com:4179/api-ti/perfiles',
                                 CURLOPT_RETURNTRANSFER => true,
                                 CURLOPT_ENCODING => '',
                                 CURLOPT_MAXREDIRS => 10,

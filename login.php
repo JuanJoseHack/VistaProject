@@ -3,7 +3,7 @@
 $curl = curl_init();
 
 curl_setopt_array($curl, array(
-    CURLOPT_URL => 'http://ti.app.informaticapp.com:4176/api-ti/usuarios',
+    CURLOPT_URL => 'http://ti.app.informaticapp.com:4179/api-ti/usuarios',
     CURLOPT_RETURNTRANSFER => true,
     CURLOPT_ENCODING => '',
     CURLOPT_MAXREDIRS => 10,
@@ -21,29 +21,36 @@ $data = json_decode($response, true); // Decodificar el JSON como array asociati
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = $_POST['username'];
     $password = $_POST['password'];
+    $user_found = false;
 
-    // Verifica si $data está definido y tiene al menos un elemento en el índice [0]
-    if (isset($data[0])) {
-        $user = $data[0]; // Obtiene el primer usuario del array $data
-
-        // Verifica si existen las claves 'usuario' y 'password' en el array $user
-        if (isset($user['usuario']) && isset($user['password'])) {
-            // Comparar el usuario y contraseña ingresados con los datos del usuario
-            if ($user['usuario'] === $username && $user['password'] === $password) {
-                // Inicio de sesión exitoso, redirige a login.php
-                header('Location: index.php');
-                exit; // Detiene la ejecución del script
+    // Verifica si $data está definido y no está vacío
+    if (isset($data) && !empty($data)) {
+        // Recorrer todos los usuarios en el array $data
+        foreach ($data as $user) {
+            // Verifica si existen las claves 'usuario' y 'password' en el array $user
+            if (isset($user['usuario']) && isset($user['password'])) {
+                // Comparar el usuario y contraseña ingresados con los datos del usuario
+                if ($user['usuario'] === $username && $user['password'] === $password) {
+                    $user_found = true;
+                    break; // Detiene el bucle si se encuentra un usuario válido
+                }
             }
         }
     }
 
-    // Si no se encuentra usuario o la contraseña no coincide
-    $error_message = "Usuario o contraseña equivocada";
+    if ($user_found) {
+        // Inicio de sesión exitoso, redirige a index.php
+        header('Location: index.php');
+        exit; // Detiene la ejecución del script
+    } else {
+        // Si no se encuentra usuario o la contraseña no coincide
+        $error_message = "Usuario o contraseña equivocada";
 
-    // Generar código JavaScript para mostrar el mensaje de error en una ventana emergente
-    echo '<script language="javascript">';
-    echo 'alert("' . $error_message . '")';
-    echo '</script>';
+        // Generar código JavaScript para mostrar el mensaje de error en una ventana emergente
+        echo '<script language="javascript">';
+        echo 'alert("' . $error_message . '")';
+        echo '</script>';
+    }
 }
 ?>
 
