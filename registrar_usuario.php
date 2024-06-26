@@ -1,4 +1,46 @@
+<?php
 
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+    $curl = curl_init();
+    curl_setopt_array($curl, array(
+        CURLOPT_URL => 'http://ti.app.informaticapp.com:4181/api-ti/modulos',
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => '',
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 0,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => 'POST',
+        CURLOPT_POSTFIELDS => '{
+  "usuario": "' . $_POST['usuario'] . '",
+  "password": "' . $_POST['password'] . '",
+  "nombres": "' . $_POST['nombres'] . '",
+  "apellidos": "' . $_POST['apellidos'] . '",
+  "telefono": "' . $_POST['telefono'] . '",
+  "email": "' . $_POST['email'] . '",
+  "edad": "' . $_POST['edad'] . '",
+  "foto": "' . $_POST['foto'] . '",
+  "sucursal": {
+    "id": ' . $_POST['id_sucursal'] . '
+  },
+  "perfil": {
+    "id": ' . $_POST['id_perfil'] . '
+  },
+  "estado": 1
+}
+',
+        CURLOPT_HTTPHEADER => array(
+            'Content-Type: application/json'
+        ),
+    ));
+
+    $response = curl_exec($curl);
+    curl_close($curl);
+    header("Location: index.php");
+}
+
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -231,11 +273,11 @@
 
                     <div class="form-group">
                         <label for="sucursal">Sucursal:</label>
-                        <select name="sucursal" class="form-control" required>
+                        <select name="id_sucursal" class="form-control" required>
                             <?php
                             $curl = curl_init();
                             curl_setopt_array($curl, array(
-                                CURLOPT_URL => 'http://ti.app.informaticapp.com:4179/api-ti/sucursales',
+                                CURLOPT_URL => 'http://ti.app.informaticapp.com:4181/api-ti/sucursales',
                                 CURLOPT_RETURNTRANSFER => true,
                                 CURLOPT_ENCODING => '',
                                 CURLOPT_MAXREDIRS => 10,
@@ -262,11 +304,11 @@
 
                     <div class="form-group">
                         <label for="perfil">Perfil:</label>
-                        <select name="perfil" class="form-control" required>
+                        <select name="id_perfil" class="form-control" required>
                             <?php
                             $curl = curl_init();
                             curl_setopt_array($curl, array(
-                                CURLOPT_URL => 'http://ti.app.informaticapp.com:4179/api-ti/perfiles',
+                                CURLOPT_URL => 'http://ti.app.informaticapp.com:4181/api-ti/perfiles',
                                 CURLOPT_RETURNTRANSFER => true,
                                 CURLOPT_ENCODING => '',
                                 CURLOPT_MAXREDIRS => 10,
