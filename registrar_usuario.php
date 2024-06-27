@@ -1,10 +1,8 @@
 <?php
-
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-
     $curl = curl_init();
     curl_setopt_array($curl, array(
-        CURLOPT_URL => 'http://ti.app.informaticapp.com:4181/api-ti/modulos',
+        CURLOPT_URL => 'http://ti.app.informaticapp.com:4181/api-ti/usuarios',
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => '',
         CURLOPT_MAXREDIRS => 10,
@@ -12,24 +10,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         CURLOPT_FOLLOWLOCATION => true,
         CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
         CURLOPT_CUSTOMREQUEST => 'POST',
-        CURLOPT_POSTFIELDS => '{
-  "usuario": "' . $_POST['usuario'] . '",
-  "password": "' . $_POST['password'] . '",
-  "nombres": "' . $_POST['nombres'] . '",
-  "apellidos": "' . $_POST['apellidos'] . '",
-  "telefono": "' . $_POST['telefono'] . '",
-  "email": "' . $_POST['email'] . '",
-  "edad": "' . $_POST['edad'] . '",
-  "foto": "' . $_POST['foto'] . '",
-  "sucursal": {
-    "id": ' . $_POST['id_sucursal'] . '
-  },
-  "perfil": {
-    "id": ' . $_POST['id_perfil'] . '
-  },
-  "estado": 1
-}
-',
+        CURLOPT_POSTFIELDS => json_encode(array(
+            "usuario" => $_POST['usuario'],
+            "password" => $_POST['password'],
+            "nombres" => $_POST['nombres'],
+            "apellidos" => $_POST['apellidos'],
+            "telefono" => $_POST['telefono'],
+            "email" => $_POST['email'],
+            "edad" => $_POST['edad'],
+            "foto" => $_POST['foto'],
+            "sucursal" => array("id" => $_POST['id_sucursal']),
+            "perfil" => array("id" => $_POST['id_perfil']),
+            "estado" => 1
+        )),
         CURLOPT_HTTPHEADER => array(
             'Content-Type: application/json'
         ),
@@ -37,9 +30,30 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $response = curl_exec($curl);
     curl_close($curl);
-    header("Location: index.php");
+    header("Location: usuarios.php");
+    exit;
 }
 
+function obtenerDatos($url)
+{
+    $curl = curl_init();
+    curl_setopt_array($curl, array(
+        CURLOPT_URL => $url,
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => '',
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 0,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => 'GET',
+    ));
+    $response = curl_exec($curl);
+    curl_close($curl);
+    return json_decode($response, true);
+}
+
+$perfiles = obtenerDatos('http://ti.app.informaticapp.com:4181/api-ti/perfiles');
+$sucursales = obtenerDatos('http://ti.app.informaticapp.com:4181/api-ti/sucursales');
 ?>
 
 <!DOCTYPE html>
@@ -234,10 +248,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         <div id="layoutSidenav_content">
 
-            <<div class="container ">
+            <div class="container">
                 <h2>Formulario de Usuario</h2>
-                <form method="POST" action="registrar_usuario.php">
-                    <!-- Otros campos de tu formulario -->
+                <form method="POST" action="">
                     <div class="form-group">
                         <label for="usuario">Usuario:</label>
                         <input type="text" class="form-control" name="usuario" id="usuario" required>
@@ -270,87 +283,40 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <label for="foto">Foto:</label>
                         <input type="text" class="form-control" name="foto" id="foto" required>
                     </div>
-
                     <div class="form-group">
                         <label for="sucursal">Sucursal:</label>
-                        <select name="id_sucursal" class="form-control" required>
-                            <?php
-                            $curl = curl_init();
-                            curl_setopt_array($curl, array(
-                                CURLOPT_URL => 'http://ti.app.informaticapp.com:4181/api-ti/sucursales',
-                                CURLOPT_RETURNTRANSFER => true,
-                                CURLOPT_ENCODING => '',
-                                CURLOPT_MAXREDIRS => 10,
-                                CURLOPT_TIMEOUT => 0,
-                                CURLOPT_FOLLOWLOCATION => true,
-                                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                                CURLOPT_CUSTOMREQUEST => 'GET',
-                            ));
-
-                            $response = curl_exec($curl);
-                            curl_close($curl);
-                            $data = json_decode($response);
-
-                            if (!empty($data)) {
-                                foreach ($data as $sucursal) {
-                                    echo '<option value="' . $sucursal->id_sucursal . '">' . $sucursal->nombre . '</option>';
-                                }
-                            } else {
-                                echo '<option value="">No se encontraron sucursales</option>';
-                            }
-                            ?>
+                        <select class="form-control" name="id_sucursal" required>
+                            <?php foreach ($sucursales as $sucursal) : ?>
+                                <option value="<?php echo $sucursal['id']; ?>"><?php echo $sucursal['nombre']; ?></option>
+                            <?php endforeach; ?>
                         </select>
                     </div>
-
                     <div class="form-group">
                         <label for="perfil">Perfil:</label>
-                        <select name="id_perfil" class="form-control" required>
-                            <?php
-                            $curl = curl_init();
-                            curl_setopt_array($curl, array(
-                                CURLOPT_URL => 'http://ti.app.informaticapp.com:4181/api-ti/perfiles',
-                                CURLOPT_RETURNTRANSFER => true,
-                                CURLOPT_ENCODING => '',
-                                CURLOPT_MAXREDIRS => 10,
-                                CURLOPT_TIMEOUT => 0,
-                                CURLOPT_FOLLOWLOCATION => true,
-                                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                                CURLOPT_CUSTOMREQUEST => 'GET',
-                            ));
-
-                            $response = curl_exec($curl);
-                            curl_close($curl);
-                            $data = json_decode($response);
-
-                            if (!empty($data)) {
-                                foreach ($data as $perfil) {
-                                    echo '<option value="' . $perfil->id_perfil . '">' . $perfil->nombre . '</option>';
-                                }
-                            } else {
-                                echo '<option value="">No se encontraron perfiles</option>';
-                            }
-                            ?>
+                        <select class="form-control" name="id_perfil" required>
+                            <?php foreach ($perfiles as $perfil) : ?>
+                                <option value="<?php echo $perfil['id']; ?>"><?php echo $perfil['nombre']; ?></option>
+                            <?php endforeach; ?>
                         </select>
                     </div>
-                    <!-- Otros campos de tu formulario -->
                     <button type="submit" class="btn btn-primary">Enviar</button>
                 </form>
-        </div>
+            </div>
 
-        <!-- Footer -->
-        <footer class="py-4 bg-light mt-auto">
-            <div class="container-fluid">
-                <div class="d-flex align-items-center justify-content-between small">
-                    <div class="text-muted">Copyright &copy; E-Marke Pro 2024</div>
-                    <div>
-                        <a href="#">Privacy Policy</a>
-                        &middot;
-                        <a href="#">Terms &amp; Conditions</a>
+            <!-- Footer -->
+            <footer class="py-4 bg-light mt-auto">
+                <div class="container-fluid">
+                    <div class="d-flex align-items-center justify-content-between small">
+                        <div class="text-muted">Copyright &copy; E-Marke Pro 2024</div>
+                        <div>
+                            <a href="#">Privacy Policy</a>
+                            &middot;
+                            <a href="#">Terms &amp; Conditions</a>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </footer>
-    </div>
+            </footer>
+        </div>
     </div>
 
     <!-- JS, Popper.js, and jQuery -->
