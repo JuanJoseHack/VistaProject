@@ -2,7 +2,7 @@
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $curl = curl_init();
     curl_setopt_array($curl, array(
-        CURLOPT_URL => 'http://ti.app.informaticapp.com:4181/api-ti/usuarios',
+        CURLOPT_URL => 'http://ti.app.informaticapp.com:4185/api-ti/usuarios',
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => '',
         CURLOPT_MAXREDIRS => 10,
@@ -52,8 +52,8 @@ function obtenerDatos($url)
     return json_decode($response, true);
 }
 
-$perfiles = obtenerDatos('http://ti.app.informaticapp.com:4181/api-ti/perfiles');
-$sucursales = obtenerDatos('http://ti.app.informaticapp.com:4181/api-ti/sucursales');
+$perfiles = obtenerDatos('http://ti.app.informaticapp.com:4182/api-ti/perfiles');
+$sucursales = obtenerDatos('http://ti.app.informaticapp.com:4182/api-ti/sucursales');
 ?>
 
 <!DOCTYPE html>
@@ -278,10 +278,6 @@ $sucursales = obtenerDatos('http://ti.app.informaticapp.com:4181/api-ti/sucursal
                     <div class="form-group">
                         <label for="edad">Edad:</label>
                         <input type="number" class="form-control" name="edad" id="edad" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="foto">Foto:</label>
-                        <input type="text" class="form-control" name="foto" id="foto" required>
                     </div>
                     <div class="form-group">
                         <label for="sucursal">Sucursal:</label>

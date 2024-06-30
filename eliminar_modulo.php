@@ -3,7 +3,7 @@
 $curl = curl_init();
 
 curl_setopt_array($curl, array(
-  CURLOPT_URL => 'http://ti.app.informaticapp.com:4181/api-ti/modulos/'.$_GET['id'],
+  CURLOPT_URL => 'http://ti.app.informaticapp.com:4185/api-ti/modulos/'.$_GET['id'],
   CURLOPT_RETURNTRANSFER => true,
   CURLOPT_ENCODING => '',
   CURLOPT_MAXREDIRS => 10,

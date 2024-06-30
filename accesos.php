@@ -1,23 +1,105 @@
 <?php
+// Función para obtener datos desde una URL usando cURL
+function getData($url)
+{
+    $curl = curl_init();
 
-$curl = curl_init();
+    curl_setopt_array($curl, array(
+        CURLOPT_URL => $url,
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => '',
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 0,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => 'GET',
+    ));
 
-curl_setopt_array($curl, array(
-    CURLOPT_URL => 'http://ti.app.informaticapp.com:4181/api-ti/accesos',
-    CURLOPT_RETURNTRANSFER => true,
-    CURLOPT_ENCODING => '',
-    CURLOPT_MAXREDIRS => 10,
-    CURLOPT_TIMEOUT => 0,
-    CURLOPT_FOLLOWLOCATION => true,
-    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-    CURLOPT_CUSTOMREQUEST => 'GET',
-));
+    $response = curl_exec($curl);
+    curl_close($curl);
 
-$response = curl_exec($curl);
+    return json_decode($response, true); // Decodifica como un array asociativo
+}
 
-curl_close($curl);
-$data = json_decode($response);
+// Función para enviar datos a la API de accesos usando cURL
+function sendData($url, $data, $method = 'POST')
+{
+    $curl = curl_init();
 
+    curl_setopt_array($curl, array(
+        CURLOPT_URL => $url,
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => '',
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 0,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => $method,
+        CURLOPT_POSTFIELDS => json_encode($data),
+        CURLOPT_HTTPHEADER => array(
+            'Content-Type: application/json'
+        ),
+    ));
+
+    $response = curl_exec($curl);
+    curl_close($curl);
+
+    return json_decode($response, true);
+}
+
+// URLs de las APIs
+$perfilesUrl = 'http://ti.app.informaticapp.com:4185/api-ti/perfiles';
+$modulosUrl = 'http://ti.app.informaticapp.com:4185/api-ti/modulos';
+$accesosUrl = 'http://ti.app.informaticapp.com:4185/api-ti/accesos';
+
+// Obtiene los datos de las APIs
+$perfiles = getData($perfilesUrl);
+$modulos = getData($modulosUrl);
+
+// Inicializa accesos como un array vacío
+$accesos = [];
+
+// Procesa el formulario cuando se envía
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $perfilId = $_POST['profiles'];
+    $accesosExistentes = getData("$accesosUrl?perfil=$perfilId");
+
+    foreach ($modulos as $modulo) {
+        $moduloId = $modulo['id'];
+        $estado = isset($_POST["modulo-$moduloId"]) ? 1 : 0;
+
+        $data = array(
+            'perfil' => array('id' => $perfilId),
+            'modulo' => array('id' => $moduloId),
+            'estado' => $estado
+        );
+
+        // Busca si el acceso ya existe
+        $accessExists = false;
+        $accesoId = null;
+        foreach ($accesosExistentes as $acceso) {
+            if ($acceso['perfil']['id'] == $perfilId && $acceso['modulo']['id'] == $moduloId) {
+                $accessExists = true;
+                $accesoId = $acceso['id'];
+                break;
+            }
+        }
+
+        if ($accessExists) {
+            // Actualiza el acceso existente
+            sendData("$accesosUrl/$accesoId", $data, 'PUT');
+        } else {
+            // Crea un nuevo acceso
+            sendData($accesosUrl, $data, 'POST');
+        }
+    }
+
+    // Recarga los accesos después de guardar
+    $accesos = getData("$accesosUrl?perfil=$perfilId");
+} elseif ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['profile'])) {
+    $perfilId = $_GET['profile'];
+    $accesos = getData("$accesosUrl?perfil=$perfilId");
+}
 ?>
 
 <!DOCTYPE html>
@@ -212,36 +294,56 @@ $data = json_decode($response);
 
         <div id="layoutSidenav_content">
 
-            <div class="container col-xl-12">
-                <h1 class="mb-5 mt-4">Accesos</h1>
-                <a href="registrar.php" class="btn btn-primary mb-3">Registrar Acceso</a>
-                <table class="table">
-                    <thead class="thead-light">
-                        <tr>
-                            <th scope="col">Perfiles</th>
-                            <th scope="col">Modulos</th>
-                            <th scope="col" colspan="2">Operaciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
 
-                        <?php foreach ($data as $item) : ?>
-                            <tr>
-                                <td>
-                                    <?php echo isset($item->perfil->nombre) ? $item->perfil->nombre : "Perfil no disponible"; ?>
-                                </td>
-                                <td>
-                                    <?php echo isset($item->modulo->nombre) ? $item->modulo->nombre : "Módulo no disponible"; ?>
-                                </td>
-                                <td><a href="editar.php?id=<?= $item->id ?>" class="btn btn-warning">Editar</a></td>
-                                <td><a href="eliminar.php?id=<?= $item->id ?>" class="btn btn-danger">Eliminar</a></td>
-                            </tr>
-                        <?php endforeach; ?>
+            <div class="container mt-4">
+                <div class="row">
+                    <div class="col-md-3">
+                        <form method="get" action="">
+                            <label for="profiles">Perfiles</label>
+                            <select id="profiles" name="profile" class="form-control" onchange="this.form.submit()">
+                                <option value="">Seleccionar perfil</option>
+                                <?php
+                                foreach ($perfiles as $perfil) {
+                                    $selected = (isset($_GET['profile']) && $_GET['profile'] == $perfil['id']) ? "selected" : "";
+                                    echo "<option value=\"{$perfil['id']}\" $selected>{$perfil['nombre']}</option>";
+                                }
+                                ?>
+                            </select>
+                        </form>
+                    </div>
+                    <div class="col-md-9">
+                        <h3>Modulos</h3>
+                        <form method="post">
+                            <?php
+                            if (isset($_GET['profile'])) {
+                                $perfilId = $_GET['profile'];
+                                // Crea un array asociativo para facilitar la búsqueda de accesos
+                                $accesosPorPerfil = [];
+                                foreach ($accesos as $acceso) {
+                                    if ($acceso['perfil']['id'] == $perfilId) {
+                                        $accesosPorPerfil[$acceso['modulo']['id']] = $acceso['estado'];
+                                    }
+                                }
 
-                    </tbody>
-                </table>
+                                foreach ($modulos as $modulo) {
+                                    $moduloId = $modulo['id'];
+                                    $checked = isset($accesosPorPerfil[$moduloId]) && $accesosPorPerfil[$moduloId] == 1 ? "checked" : "";
+                                    echo "
+                <div class=\"form-check\">
+                    <input type=\"checkbox\" class=\"form-check-input\" name=\"modulo-{$moduloId}\" id=\"modulo-{$moduloId}\" $checked>
+                    <label class=\"form-check-label\" for=\"modulo-{$moduloId}\">{$modulo['nombre']}</label>
+                </div>";
+                                }
+                            } else {
+                                echo "<p>Selecciona un perfil para ver los módulos.</p>";
+                            }
+                            ?>
+                            <input type="hidden" name="profiles" value="<?php echo isset($_GET['profile']) ? $_GET['profile'] : ''; ?>">
+                            <button type="submit" class="btn btn-primary mt-3">Guardar</button>
+                        </form>
+                    </div>
+                </div>
             </div>
-
             <!-- Footer -->
             <footer class="py-4 bg-light mt-auto">
                 <div class="container-fluid">

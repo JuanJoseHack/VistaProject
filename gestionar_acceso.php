@@ -1,32 +1,39 @@
 <?php
+// Obtener el perfil desde la URL
+$perfil = isset($_GET['perfil']) ? $_GET['perfil'] : 'Perfil no especificado';
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
+$curl = curl_init();
 
-    $curl = curl_init();
+curl_setopt_array($curl, array(
+    CURLOPT_URL => 'http://ti.app.informaticapp.com:4185/api-ti/modulos',
+    CURLOPT_RETURNTRANSFER => true,
+    CURLOPT_ENCODING => '',
+    CURLOPT_MAXREDIRS => 10,
+    CURLOPT_TIMEOUT => 0,
+    CURLOPT_FOLLOWLOCATION => true,
+    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+    CURLOPT_CUSTOMREQUEST => 'GET',
+));
 
-    curl_setopt_array($curl, array(
-        CURLOPT_URL => 'ti.app.informaticapp.com:4185/api-ti/modulos',
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_ENCODING => '',
-        CURLOPT_MAXREDIRS => 10,
-        CURLOPT_TIMEOUT => 0,
-        CURLOPT_FOLLOWLOCATION => true,
-        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-        CURLOPT_CUSTOMREQUEST => 'POST',
-        CURLOPT_POSTFIELDS => json_encode(array(
-            "nombre" => $_POST['nombre'],
-            "estado" => 1
-        )),
-        CURLOPT_HTTPHEADER => array(
-            'Content-Type: application/json'
-        ),
-    ));
+$response = curl_exec($curl);
 
-    $response = curl_exec($curl);
-    curl_close($curl);
-    header("Location: modulos.php");
+if (curl_errno($curl)) {
+    echo 'Error en cURL: ' . curl_error($curl);
+    $data = []; // Inicializar $data como un array vacío en caso de error
+} else {
+    $data = json_decode($response);
+    if (json_last_error() !== JSON_ERROR_NONE) {
+        echo 'Error al decodificar JSON: ' . json_last_error_msg();
+        $data = []; // Inicializar $data como un array vacío en caso de error
+    }
 }
+
+curl_close($curl);
+
+// Inicializar $modulos_seleccionados
+$modulos_seleccionados = isset($_POST['modulos']) ? $_POST['modulos'] : [];
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -55,6 +62,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     <!-- Font Awesome JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/js/all.min.js" crossorigin="anonymous"></script>
+
 </head>
 
 <body class="sb-nav-fixed">
@@ -126,9 +134,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 </a>
                                 <div class="collapse" id="pagesCollapseAuth" aria-labelledby="headingOne" data-parent="#sidenavAccordionPages">
                                     <nav class="sb-sidenav-menu-nested nav">
-                                        <a class="nav-link" href="login.html">Registrar compra</a>
-                                        <a class="nav-link" href="register.html">Compras</a>
-                                        <a class="nav-link" href="register.html">Detalles Compras</a>
+                                        <a class="nav-link" href="pages/compras.php">Registar compra</a>
+                                        <a class="nav-link" href="#">Compras</a>
+                                        <a class="nav-link" href="#">Detalles Compras</a>
                                     </nav>
                                 </div>
                                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#pagesCollapseError" aria-expanded="false" aria-controls="pagesCollapseError">
@@ -219,33 +227,45 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </div>
 
         <div id="layoutSidenav_content">
-            <div class="container col-xl-12">
-                <h1 class="text-center mb-4 mt-4">Registrar Modulos</h1>
-                <div class="container">
-                    <form method="post" class="col-xl-5 offset-4 border p-3">
-                        <div class="form-group">
-                            <input type="text" name="nombre" placeholder="Nombre del modulo" class="form-control mb-2">
+
+            <div class="container">
+                <h2 class="mt-5">Gestión de accesos para el perfil: <?php echo htmlspecialchars($perfil); ?></h2>
+                <form id="accesosForm" method="post">
+                    <div class="container mt-4">
+                        <div class="row">
+                            <?php foreach ($data as $modulo) : ?>
+                                <div class="col-4">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="modulo_<?php echo htmlspecialchars($modulo->id); ?>" name="modulos[]" value="<?php echo htmlspecialchars($modulo->id); ?>" <?php echo isset($modulos_seleccionados) && in_array($modulo->id, $modulos_seleccionados) ? 'checked' : ''; ?>>
+                                        <label class="form-check-label" for="modulo_<?php echo htmlspecialchars($modulo->id); ?>">
+                                            <?php echo htmlspecialchars($modulo->nombre); ?>
+                                        </label>
+                                    </div>
+                                </div>
+                            <?php endforeach; ?>
                         </div>
-                        <button type="submit" class="btn btn-success">Guardar</button>
-                        <a href="modulos.php" class="btn btn-danger">Cancelar</a>
-                    </form>
-                </div>
+                        <div class="text-right mt-3">
+                            <button type="submit" class="btn btn-primary">Guardar</button>
+                        </div>
+                    </div>
+                </form>
             </div>
+
+            <!-- Footer -->
+            <footer class="py-4 bg-light mt-auto">
+                <div class="container-fluid">
+                    <div class="d-flex align-items-center justify-content-between small">
+                        <div class="text-muted">Copyright &copy; E-Marke Pro 2024</div>
+                        <div>
+                            <a href="#">Privacy Policy</a>
+                            &middot;
+                            <a href="#">Terms &amp; Conditions</a>
+                        </div>
+                    </div>
+                </div>
+            </footer>
         </div>
     </div>
-
-    <footer class="py-4 bg-light mt-auto">
-        <div class="container-fluid">
-            <div class="d-flex align-items-center justify-content-between small">
-                <div class="text-muted">Copyright &copy; E-Marke Pro 2024</div>
-                <div>
-                    <a href="#">Privacy Policy</a>
-                    &middot;
-                    <a href="#">Terms &amp; Conditions</a>
-                </div>
-            </div>
-        </div>
-    </footer>
 
     <!-- JS, Popper.js, and jQuery -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>

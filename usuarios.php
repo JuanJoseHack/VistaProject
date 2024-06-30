@@ -3,7 +3,7 @@
 $curl = curl_init();
 
 curl_setopt_array($curl, array(
-  CURLOPT_URL => 'http://ti.app.informaticapp.com:4181/api-ti/usuarios',
+  CURLOPT_URL => 'http://ti.app.informaticapp.com:4185/api-ti/usuarios',
   CURLOPT_RETURNTRANSFER => true,
   CURLOPT_ENCODING => '',
   CURLOPT_MAXREDIRS => 10,
@@ -225,7 +225,6 @@ $data = json_decode($response);
                             <th scope="col">Teléfono</th>
                             <th scope="col">Email</th>
                             <th scope="col">Edad</th>
-                            <th scope="col">Foto</th>
                             <th scope="col">Sucursal</th>
                             <th scope="col">Perfil</th>
                             <th scope="col" colspan="2">Operaciones</th>
@@ -241,11 +240,10 @@ $data = json_decode($response);
                                 <td><?php print $item->telefono ?></td>
                                 <td><?php print $item->email ?></td>
                                 <td><?php print $item->edad ?></td>
-                                <td><?php print $item->foto ?></td>
                                 <td><?php echo isset($item->sucursal->nombre) ? $item->sucursal->nombre : "Perfil no disponible"; ?></td>
                                 <td><?php echo isset($item->perfil->nombre) ? $item->perfil->nombre : "Perfil no disponible"; ?></td>
-                                <td><a href="editar.php?id=<?= $item->id?>" class="btn btn-warning">Editar</a></td>
-                                <td><a href="eliminar_usuario.php?id=<?= $item->id?>" class="btn btn-danger">Eliminar</a></td>
+                                <td><a href="editar.php?id=<?= $item->ididUsuario?>" class="btn btn-warning">Editar</a></td>
+                                <td><a href="eliminar_usuario.php?id=<?= $item->idUsuario?>" class="btn btn-danger">Eliminar</a></td>
                             </tr>
                         <?php endforeach ?>
                     </tbody>
