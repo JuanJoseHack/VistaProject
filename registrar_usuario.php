@@ -52,8 +52,8 @@ function obtenerDatos($url)
     return json_decode($response, true);
 }
 
-$perfiles = obtenerDatos('http://ti.app.informaticapp.com:4182/api-ti/perfiles');
-$sucursales = obtenerDatos('http://ti.app.informaticapp.com:4182/api-ti/sucursales');
+$perfiles = obtenerDatos('http://ti.app.informaticapp.com:4185/api-ti/perfiles');
+$sucursales = obtenerDatos('http://ti.app.informaticapp.com:4185/api-ti/sucursales');
 ?>
 
 <!DOCTYPE html>
