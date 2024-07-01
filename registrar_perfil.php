@@ -221,6 +221,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </div>
 
         <div id="layoutSidenav_content">
+            
             <div class="container col-xl-12">
                 <h1 class="text-center mb-4 mt-4">Registrar Perfiles</h1>
                 <div class="container">

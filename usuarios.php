@@ -242,7 +242,7 @@ $data = json_decode($response);
                                 <td><?php print $item->edad ?></td>
                                 <td><?php echo isset($item->sucursal->nombre) ? $item->sucursal->nombre : "Perfil no disponible"; ?></td>
                                 <td><?php echo isset($item->perfil->nombre) ? $item->perfil->nombre : "Perfil no disponible"; ?></td>
-                                <td><a href="editar.php?idUsuario=<?= $item->idUsuario?>" class="btn btn-warning">Editar</a></td>
+                                <td><a href="editar_usuario.php?idUsuario=<?= $item->idUsuario?>" class="btn btn-warning">Editar</a></td>
                                 <td><a href="eliminar_usuario.php?idUsuario=<?= $item->idUsuario?>" class="btn btn-danger">Eliminar</a></td>
                             </tr>
                         <?php endforeach ?>
