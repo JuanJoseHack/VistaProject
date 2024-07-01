@@ -48,9 +48,9 @@ function sendData($url, $data, $method = 'POST')
 }
 
 // URLs de las APIs
-$perfilesUrl = 'http://ti.app.informaticapp.com:4185/api-ti/perfiles';
-$modulosUrl = 'http://ti.app.informaticapp.com:4185/api-ti/modulos';
-$accesosUrl = 'http://ti.app.informaticapp.com:4185/api-ti/accesos';
+$perfilesUrl = 'http://ti.app.informaticapp.com:4186/api-ti/perfiles';
+$modulosUrl = 'http://ti.app.informaticapp.com:4186/api-ti/modulos';
+$accesosUrl = 'http://ti.app.informaticapp.com:4186/api-ti/accesos';
 
 // Obtiene los datos de las APIs
 $perfiles = getData($perfilesUrl);

@@ -2,7 +2,7 @@
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $curl = curl_init();
     curl_setopt_array($curl, array(
-        CURLOPT_URL => 'http://ti.app.informaticapp.com:4185/api-ti/usuarios',
+        CURLOPT_URL => 'http://ti.app.informaticapp.com:4186/api-ti/usuarios',
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => '',
         CURLOPT_MAXREDIRS => 10,
@@ -52,8 +52,8 @@ function obtenerDatos($url)
     return json_decode($response, true);
 }
 
-$perfiles = obtenerDatos('http://ti.app.informaticapp.com:4185/api-ti/perfiles');
-$sucursales = obtenerDatos('http://ti.app.informaticapp.com:4185/api-ti/sucursales');
+$perfiles = obtenerDatos('http://ti.app.informaticapp.com:4186/api-ti/perfiles');
+$sucursales = obtenerDatos('http://ti.app.informaticapp.com:4186/api-ti/sucursales');
 ?>
 
 <!DOCTYPE html>
