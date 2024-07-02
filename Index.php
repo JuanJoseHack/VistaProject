@@ -20,6 +20,12 @@ function tieneAcceso($modulo_id, $accesos)
     }
     return false;
 }
+
+// Obtener el nombre del perfil
+$perfil_nombre = isset($user_data['perfil']['nombre']) ? $user_data['perfil']['nombre'] : 'Usuario';
+
+// Obtener el nombre del usuario
+$nombre_usuario = isset($user_data['nombres']) ? $user_data['nombres'] : 'Invitado';
 ?>
 
 <!DOCTYPE html>
@@ -169,7 +175,7 @@ function tieneAcceso($modulo_id, $accesos)
                     </div>
                 </div>
                 <div class="sb-sidenav-footer">
-                    <div class="small">BIENVENIDO</div>
+                    <div class="small"><?php echo htmlspecialchars($nombre_usuario); ?></div>
                 </div>
             </nav>
         </div>
@@ -177,49 +183,12 @@ function tieneAcceso($modulo_id, $accesos)
             <main>
                 <div class="container-fluid">
                     <ol class="breadcrumb mb-4 mt-4">
-                        <li class="breadcrumb-item active">Dashboard Admin</li>
+                        <li class="breadcrumb-item active">Dashboard <?php echo htmlspecialchars($perfil_nombre); ?></li>
                     </ol>
-                    <div class="row">
-                        <div class="col-xl-3 col-md-6">
-                            <div class="card bg-primary text-white mb-4">
-                                <div class="card-body">Usuarios</div>
-                                <div class="card-footer d-flex align-items-center justify-content-between">
-                                    <a class="small text-white stretched-link" href="usuarios.php">Ver Usuarios</a>
-                                    <div class="small text-white"><i class="fas fa-angle-right"></i></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-3 col-md-6">
-                            <div class="card bg-warning text-white mb-4">
-                                <div class="card-body">Clientes</div>
-                                <div class="card-footer d-flex align-items-center justify-content-between">
-                                    <a class="small text-white stretched-link" href="#">Ver Clientes</a>
-                                    <div class="small text-white"><i class="fas fa-angle-right"></i></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-3 col-md-6">
-                            <div class="card bg-success text-white mb-4">
-                                <div class="card-body">Productos</div>
-                                <div class="card-footer d-flex align-items-center justify-content-between">
-                                    <a class="small text-white stretched-link" href="#">Ver Productos</a>
-                                    <div class="small text-white"><i class="fas fa-angle-right"></i></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-3 col-md-6">
-                            <div class="card bg-danger text-white mb-4">
-                                <div class="card-body">Sucursales</div>
-                                <div class="card-footer d-flex align-items-center justify-content-between">
-                                    <a class="small text-white stretched-link" href="#">Ver Sucursales</a>
-                                    <div class="small text-white"><i class="fas fa-angle-right"></i></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
+                </div>
 
-                    </div>
+                <div class="row">
+                    <img src="pages/OIP.jpeg" alt="">
                 </div>
             </main>
             <footer class="py-4 bg-light mt-auto">
