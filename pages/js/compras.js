@@ -27,11 +27,11 @@ function loadProductos() {
             var html = '';
             $.each(response, function (i, item) {
                 html += `<tr>
-                                        <td>${response[i].nombre}</td>
-                                        <td><input type="text" style="width: 60px;" class="form-control" id="cantidad${response[i].id}"></td>
-                                        <td><input type="text"  style="width: 60px;" class="form-control" id="precio${response[i].id}"></td>
-                                        <td><button type="button" class="btn btn-success" onclick="addProductToList(${response[i].id}, '${response[i].nombre}')">Agregar</button></td>
-                                    </tr>`;
+                        <td>${response[i].nombre}</td>
+                        <td><input type="text" style="width: 60px;" class="form-control" id="cantidad${response[i].id}"></td>
+                        <td><input type="text"  style="width: 60px;" class="form-control" id="precio${response[i].id}"></td>
+                        <td><button type="button" class="btn btn-success" onclick="addProductToList(${response[i].id}, '${response[i].nombre}')">Agregar</button></td>
+                    </tr>`;
             });
             $('#dataProducts').html(html);
         },
@@ -98,6 +98,7 @@ function loadCompras() {
                             <td>${response[i].proveedor != null ? response[i].proveedor.nombre : ''}</td>
                             <td>
                                 <button class='btn btn-warning btn-sm' onclick='editarCompra(${response[i].id}, \"${response[i].codigoRemision}\", \"${response[i].fecha}\", \"${response[i].estado}\", \"${response[i].proveedor != null ? response[i].proveedor.id : ''}\")'>Editar</button>
+                                <button class='btn btn-info btn-sm' onclick='DetalleCompra(${response[i].id})'>Detalles</button>
                                 <button class='btn btn-danger btn-sm' onclick='eliminarCompra(${response[i].id})'>Eliminar</button>
                             </td>
                         </tr>`;
@@ -111,6 +112,47 @@ function loadCompras() {
         }
     });
 };
+
+
+function DetalleCompra(id) {
+    $('#detalleModal').modal('show');
+    $.ajax({
+        url: URL + '/compras/'+id, // Reemplaza esta URL con la URL de tu API
+        type: 'GET',
+        success: function (response) {
+            $("#st-codigoRemision").text(response.codigoRemision);
+            $("#st-fecha").text(response.fecha);
+            $("#st-proveedor").text(response.proveedor && response.proveedor.nombre?response.proveedor.nombre:'Sin proveedor');
+            $("#st-estado").text(response.estado==1?"Aprobado":"Nulo");
+        },
+        error: function (xhr, status, error) {
+            console.error('Error:', error);
+            alert('Ocurrió un error al obtener los datos.');
+        }
+    });
+
+    $.ajax({
+        url: URL + '/DetalleCompras/compra/'+id, // Reemplaza esta URL con la URL de tu API
+        type: 'GET',
+        success: function (response) {
+            console.log(response);
+            var html = '';
+            $.each(response, function (i, item) {
+                html += `<tr>
+                        <td>${response[i].producto != null ? response[i].producto.nombre : ''}</td>
+                        <td>${response[i].cantidad}</td>
+                        <td>S/. ${(response[i].precio).toFixed(2)}</td>
+                        <td>S/. ${parseFloat((response[i].cantidad*response[i].precio).toFixed(2))}</td>
+                    </tr>`;
+            });
+            $("#dataDetalleCompraItems").html(html);
+        },
+        error: function (xhr, status, error) {
+            console.error('Error:', error);
+            alert('Ocurrió un error al obtener los datos.');
+        }
+    });
+}
 // Funcipon para listar los registros de compras
 // Función para llenar el formulario de edición con los datos de la compra seleccionada
 function editarCompra(id, codigo_remision, fecha, estado, id_proveedor) {

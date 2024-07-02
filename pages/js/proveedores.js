@@ -1,4 +1,4 @@
-var URL = 'http://ti.app.informaticapp.com:4170/api-ti/proveedores';
+var URL = 'http://ti.app.informaticapp.com:4186/api-ti/proveedores';
     $(document).ready(function() {
       // Función para cargar datos
       function loadData() {
