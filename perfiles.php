@@ -27,7 +27,7 @@ function tieneAcceso($modulo_id, $accesos)
 $curl = curl_init();
 
 curl_setopt_array($curl, array(
-    CURLOPT_URL => 'ti.app.informaticapp.com:4186/api-ti/perfiles',
+    CURLOPT_URL => 'ti.app.informaticapp.com:4188/api-ti/perfiles',
     CURLOPT_RETURNTRANSFER => true,
     CURLOPT_ENCODING => '',
     CURLOPT_MAXREDIRS => 10,

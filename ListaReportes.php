@@ -29,7 +29,7 @@ function obtenerDatosVentas()
     $curl = curl_init();
 
     curl_setopt_array($curl, array(
-        CURLOPT_URL => 'http://ti.app.informaticapp.com:4186/api-ti/ventas',
+        CURLOPT_URL => 'http://ti.app.informaticapp.com:4188/api-ti/ventas',
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => '',
         CURLOPT_MAXREDIRS => 10,
@@ -454,8 +454,6 @@ $data = obtenerDatosVentas();
             </footer>
 
         </div>
-
-
 </body>
 
 </html>

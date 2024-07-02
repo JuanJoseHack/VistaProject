@@ -214,7 +214,7 @@ function tieneAcceso($modulo_id, $accesos)
                                         <option value="">Todas las sucursales</option>
                                         <?php
                                         // Obtener todas las sucursales disponibles desde la API
-                                        $url = 'http://ti.app.informaticapp.com:4186/api-ti/ventas';
+                                        $url = 'http://ti.app.informaticapp.com:4188/api-ti/ventas';
                                         $data = json_decode(file_get_contents($url), true);
 
                                         $sucursales = [];
