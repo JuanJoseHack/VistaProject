@@ -1,4 +1,4 @@
-var URL = 'http://ti.app.informaticapp.com:4188/api-ti';
+var URL = 'http://ti.app.informaticapp.com:4188/api-ti/compras';
 
 $(document).ready(function () {
     loadCompras();
