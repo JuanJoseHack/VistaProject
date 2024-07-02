@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Consumo de Web Services</title>
@@ -20,6 +21,7 @@
     <!-- Font Awesome JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/js/all.min.js" crossorigin="anonymous"></script>
 </head>
+
 <body class="sb-nav-fixed">
     <!-- Navbar -->
     <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
@@ -46,7 +48,7 @@
                 </div>
             </li>
         </ul>
-    </nav> 
+    </nav>
     <div id="layoutSidenav">
         <div id="layoutSidenav_nav">
             <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
@@ -172,21 +174,20 @@
                 </div>
             </nav>
         </div>
-        
+
         <div id="layoutSidenav_content">
             <div class="container col-xl-12">
                 <h1 class="text-center mb-5 mt-4">Lista de Compras</h1>
-                <a href="registrar.php" class="btn btn-primary" data-toggle="modal" data-target="#createModal">Registrar compra</a>
+                <a href="#" class="btn btn-primary" id="add-compra">Registrar compra</a>
                 <table class="table ">
                     <thead class="thead-light">
-                    <tr>
-                        <th>ID</th>
-                        <th>Código Remisión</th>
-                        <th>Fecha</th>
-                        <th>Devolución</th>
-                        <th>ID Proveedor</th>
-                        <th>Acciones</th>
-                    </tr>
+                        <tr>
+                            <th>ID</th>
+                            <th>Código Remisión</th>
+                            <th>Fecha</th>
+                            <th>Proveedor</th>
+                            <th>Acciones</th>
+                        </tr>
                     </thead>
                     <tbody id="resultdata">
                     </tbody>
@@ -207,8 +208,8 @@
             </footer>
         </div>
     </div>
-     <!-- Modal para editar compra -->
-     <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+    <!-- Modal para editar compra -->
+    <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -244,7 +245,7 @@
     </div>
     <!-- Modal para crear nueva compra -->
     <div class="modal fade" id="createModal" tabindex="-1" role="dialog" aria-labelledby="createModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
+        <div class="modal-dialog modal-xl" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="createModalLabel">Crear Nueva Compra</h5>
@@ -254,21 +255,54 @@
                 </div>
                 <div class="modal-body">
                     <form id="createForm">
-                        <div class="form-group">
-                            <label for="codigo_remision">Código Remisión</label>
-                            <input type="text" class="form-control" id="codigo_remision" name="codigo_remision" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="fecha">Fecha</label>
-                            <input type="date" class="form-control" id="fecha" name="fecha" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="devolucion">Devolución</label>
-                            <input type="text" class="form-control" id="devolucion" name="devolucion" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="id_proveedor">ID Proveedor</label>
-                            <input type="text" class="form-control" id="id_proveedor" name="id_proveedor" required>
+                        <div class="row">
+                            <div class="form-group col-md-6">
+                                <label for="codigo_remision">Código Remisión</label>
+                                <input type="hidden" id="id">
+                                <input type="text" class="form-control" id="codigo_remision" name="codigo_remision" required>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="fecha">Fecha</label>
+                                <input type="datetime-local" class="form-control" id="fecha" name="fecha" required>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="id_proveedor">Proveedor</label>
+                                <select class="form-control" id="id_proveedor" name="id_proveedor" required>
+                                </select>
+                            </div>
+
+                            <div class="form-group col-md-6">
+                                <label for="devolucion">Estado:</label>
+                                <input type="checkbox" id="estado" name="estado">
+                            </div>
+                            <div class="form-group col-md-6">
+                                <h5>Lista de productos</h5>
+                                <table class="table">
+                                    <thead>
+                                    <tr>
+                                        <th>Producto</th>
+                                        <th>Cantidad</th>
+                                        <th>Precio</th>
+                                        <th>Accion</th>
+                                    </tr></thead>
+                                    <tbody id="dataProducts">
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="form-group col-md-6">
+                            <h5>Lista de pedido</h5>
+                                <table class="table">
+                                    <thead>
+                                    <tr>
+                                        <th>Producto</th>
+                                        <th>Cantidad</th>
+                                        <th>Precio</th>
+                                        <th>Accion</th>
+                                    </tr></thead>
+                                    <tbody id="dataCartProducts"></tbody>
+                                    
+                                </table>
+                            </div>
                         </div>
                         <button type="submit" class="btn btn-primary">Guardar</button>
                     </form>
@@ -283,4 +317,5 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
     <script src="js/compras.js"></script>
 </body>
+
 </html>
