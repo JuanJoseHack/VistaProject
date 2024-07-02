@@ -1,3 +1,27 @@
+<?php
+session_start(); // Iniciar la sesión
+
+// Verificar si el usuario está logueado
+if (!isset($_SESSION['user_data'])) {
+    header('Location: login.php');
+    exit;
+}
+
+$user_data = $_SESSION['user_data'];
+$user_accesos = $_SESSION['user_accesos'];
+
+// Función para verificar el acceso a un módulo
+function tieneAcceso($modulo_id, $accesos)
+{
+    foreach ($accesos as $acceso) {
+        if ($acceso['modulo']['id'] == $modulo_id && $acceso['estado'] == 1) {
+            return true;
+        }
+    }
+    return false;
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -17,7 +41,6 @@
     <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
         <a class="navbar-brand" href="index.php">E-Market Pro</a>
         <button class="btn btn-link btn-sm order-1 order-lg-0" id="sidebarToggle" href="#"><i class="fas fa-bars"></i></button>
-        <!-- Navbar Search-->
         <form class="d-none d-md-inline-block form-inline ml-auto mr-0 mr-md-3 my-2 my-md-0">
             <div class="input-group">
                 <input class="form-control" type="text" placeholder="Buscar..." aria-label="Search" aria-describedby="basic-addon2" />
@@ -26,7 +49,6 @@
                 </div>
             </div>
         </form>
-        <!-- Navbar-->
         <ul class="navbar-nav ml-auto ml-md-0">
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" id="userDropdown" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
@@ -50,104 +72,116 @@
                             Dashboard
                         </a>
                         <div class="sb-sidenav-menu-heading">Modulos</div>
-                        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
-                            <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
-                            Ventas
-                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                        </a>
-                        <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-parent="#sidenavAccordion">
-                            <nav class="sb-sidenav-menu-nested nav">
-                                <a class="nav-link" href="layout-static.html">Lista Ventas</a>
-                                <a class="nav-link" href="layout-static.html">Registrar Venta</a>
-                                <a class="nav-link" href="layout-static.html">Detalle Venta</a>
-                                <a class="nav-link" href="layout-sidenav-light.html">Clientes</a>
-                            </nav>
-                        </div>
-                        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="false" aria-controls="collapsePages">
-                            <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
-                            Compras
-                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                        </a>
-                        <div class="collapse" id="collapsePages" aria-labelledby="headingTwo" data-parent="#sidenavAccordion">
-                            <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
-                                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#pagesCollapseAuth" aria-expanded="false" aria-controls="pagesCollapseAuth">
-                                    Lista Compras
-                                    <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                                </a>
-                                <div class="collapse" id="pagesCollapseAuth" aria-labelledby="headingOne" data-parent="#sidenavAccordionPages">
-                                    <nav class="sb-sidenav-menu-nested nav">
-                                        <a class="nav-link" href="pages/compras.php">Registar compra</a>
-                                        <a class="nav-link" href="#">Compras</a>
-                                        <a class="nav-link" href="#">Detalles Compras</a>
-                                    </nav>
-                                </div>
-                                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#pagesCollapseError" aria-expanded="false" aria-controls="pagesCollapseError">
-                                    Proveedores
-                                    <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                                </a>
 
-                                <div class="collapse" id="pagesCollapseError" aria-labelledby="headingOne" data-parent="#sidenavAccordionPages">
-                                    <nav class="sb-sidenav-menu-nested nav">
-                                        <a class="nav-link" href="401.html">Registrar Proveedor</a>
-                                        <a class="nav-link" href="404.html">Proveedores</a>
-                                    </nav>
-                                </div>
-                            </nav>
-                        </div>
+                        <?php if (tieneAcceso(1, $user_accesos)) : ?>
+                            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#seguridad" aria-expanded="false" aria-controls="collapseLayouts">
+                                <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
+                                Seguridad
+                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                            </a>
+                            <div class="collapse" id="seguridad" aria-labelledby="headingOne" data-parent="#sidenavAccordion">
+                                <nav class="sb-sidenav-menu-nested nav">
+                                    <a class="nav-link" href="usuarios.php">Usuarios</a>
+                                    <a class="nav-link" href="perfiles.php">Perfiles</a>
+                                    <a class="nav-link" href="accesos.php">Accesos</a>
+                                    <a class="nav-link" href="modulos.php">Modulos</a>
+                                </nav>
+                            </div>
+                        <?php endif; ?>
 
-                        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#almacen" aria-expanded="false" aria-controls="collapseLayouts">
-                            <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
-                            Almacen
-                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                        </a>
-                        <div class="collapse" id="almacen" aria-labelledby="headingOne" data-parent="#sidenavAccordion">
-                            <nav class="sb-sidenav-menu-nested nav">
-                                <a class="nav-link" href="layout-static.html">Productos</a>
-                                <a class="nav-link" href="layout-sidenav-light.html">Sucursales </a>
-                                <a class="nav-link" href="layout-static.html">Categorias</a>
-                                <a class="nav-link" href="layout-static.html">Lugar</a>
-                            </nav>
-                        </div>
+                        <?php if (tieneAcceso(2, $user_accesos)) : ?>
+                            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseLayouts" aria-expanded="false" aria-controls="collapsePages">
+                                <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
+                                Ventas
+                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                            </a>
+                            <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-parent="#sidenavAccordion">
+                                <nav class="sb-sidenav-menu-nested nav">
+                                    <a class="nav-link" href="layout-static.html">Lista Ventas</a>
+                                    <a class="nav-link" href="layout-static.html">Registrar Venta</a>
+                                    <a class="nav-link" href="layout-static.html">Detalle Venta</a>
+                                    <a class="nav-link" href="layout-sidenav-light.html">Clientes</a>
+                                </nav>
+                            </div>
+                        <?php endif; ?>
 
-                        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#devoluciones" aria-expanded="false" aria-controls="collapseLayouts">
-                            <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
-                            Devoluciones
-                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                        </a>
-                        <div class="collapse" id="devoluciones" aria-labelledby="headingOne" data-parent="#sidenavAccordion">
-                            <nav class="sb-sidenav-menu-nested nav">
-                                <a class="nav-link" href="layout-static.html">Lista Devoluciones </a>
-                                <a class="nav-link" href="layout-sidenav-light.html">Garantias</a>
-                            </nav>
-                        </div>
+                        <?php if (tieneAcceso(3, $user_accesos)) : ?>
+                            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#devoluciones" aria-expanded="false" aria-controls="collapseLayouts">
+                                <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
+                                Devoluciones
+                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                            </a>
+                            <div class="collapse" id="devoluciones" aria-labelledby="headingOne" data-parent="#sidenavAccordion">
+                                <nav class="sb-sidenav-menu-nested nav">
+                                    <a class="nav-link" href="layout-static.html">Lista Devoluciones </a>
+                                    <a class="nav-link" href="layout-sidenav-light.html">Garantias</a>
+                                </nav>
+                            </div>
+                        <?php endif; ?>
 
-                        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#reportes" aria-expanded="false" aria-controls="collapseLayouts">
-                            <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
-                            Reportes
-                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                        </a>
+                        <?php if (tieneAcceso(4, $user_accesos)) : ?>
+                            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#reportes" aria-expanded="false" aria-controls="collapseLayouts">
+                                <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
+                                Reportes
+                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                            </a>
+                            <div class="collapse" id="reportes" aria-labelledby="headingOne" data-parent="#sidenavAccordion">
+                                <nav class="sb-sidenav-menu-nested nav">
+                                    <a class="nav-link" href="layout-static.html">Lista reportes</a>
+                                    <a class="nav-link" href="layout-sidenav-light.html">Reportes Ventas </a>
+                                </nav>
+                            </div>
+                        <?php endif; ?>
 
-                        <div class="collapse" id="reportes" aria-labelledby="headingOne" data-parent="#sidenavAccordion">
-                            <nav class="sb-sidenav-menu-nested nav">
-                                <a class="nav-link" href="layout-static.html">Lista reportes</a>
-                                <a class="nav-link" href="layout-sidenav-light.html">Reportes Ventas </a>
-                            </nav>
-                        </div>
+                        <?php if (tieneAcceso(5, $user_accesos)) : ?>
+                            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="false" aria-controls="collapseLayouts">
+                                <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
+                                Compras
+                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                            </a>
+                            <div class="collapse" id="collapsePages" aria-labelledby="headingTwo" data-parent="#sidenavAccordion">
+                                <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
+                                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#pagesCollapseAuth" aria-expanded="false" aria-controls="pagesCollapseAuth">
+                                        Lista Compras
+                                        <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                                    </a>
+                                    <div class="collapse" id="pagesCollapseAuth" aria-labelledby="headingOne" data-parent="#sidenavAccordionPages">
+                                        <nav class="sb-sidenav-menu-nested nav">
+                                            <a class="nav-link" href="pages/compras.php">Registar compra</a>
+                                            <a class="nav-link" href="#">Compras</a>
+                                            <a class="nav-link" href="#">Detalles Compras</a>
+                                        </nav>
+                                    </div>
+                                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#pagesCollapseError" aria-expanded="false" aria-controls="pagesCollapseError">
+                                        Proveedores
+                                        <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                                    </a>
 
-                        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#seguridad" aria-expanded="false" aria-controls="collapseLayouts">
-                            <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
-                            Seguridad
-                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                        </a>
+                                    <div class="collapse" id="pagesCollapseError" aria-labelledby="headingOne" data-parent="#sidenavAccordionPages">
+                                        <nav class="sb-sidenav-menu-nested nav">
+                                            <a class="nav-link" href="401.html">Registrar Proveedor</a>
+                                            <a class="nav-link" href="404.html">Proveedores</a>
+                                        </nav>
+                                    </div>
+                                </nav>
+                            </div>
+                        <?php endif; ?>
 
-                        <div class="collapse" id="seguridad" aria-labelledby="headingOne" data-parent="#sidenavAccordion">
-                            <nav class="sb-sidenav-menu-nested nav">
-                                <a class="nav-link" href="usuarios.php">Usuarios</a>
-                                <a class="nav-link" href="perfiles.php">Perfiles</a>
-                                <a class="nav-link" href="accesos.php">Accesos</a>
-                                <a class="nav-link" href="modulos.php">Modulos</a>
-                            </nav>
-                        </div>
+                        <?php if (tieneAcceso(6, $user_accesos)) : ?>
+                            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#almacen" aria-expanded="false" aria-controls="collapseLayouts">
+                                <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
+                                Almacén
+                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                            </a>
+                            <div class="collapse" id="almacen" aria-labelledby="headingOne" data-parent="#sidenavAccordion">
+                                <nav class="sb-sidenav-menu-nested nav">
+                                    <a class="nav-link" href="layout-static.html">Productos</a>
+                                    <a class="nav-link" href="layout-sidenav-light.html">Sucursales </a>
+                                    <a class="nav-link" href="layout-static.html">Categorias</a>
+                                    <a class="nav-link" href="layout-static.html">Lugar</a>
+                                </nav>
+                            </div>
+                        <?php endif; ?>
 
                         <div class="sb-sidenav-menu-heading">Complementos</div>
                         <a class="nav-link" href="charts.html">
@@ -259,8 +293,6 @@
                                         </tr>
                                     </tfoot>
                                     <tbody>
-
-
                                         <tr>
                                             <td>Airi Satou</td>
                                             <td>Accountant</td>
@@ -301,10 +333,6 @@
                                             <td>2009/09/15</td>
                                             <td>$205,500</td>
                                         </tr>
-
-
-
-
                                     </tbody>
                                 </table>
                             </div>
@@ -315,7 +343,7 @@
             <footer class="py-4 bg-light mt-auto">
                 <div class="container-fluid">
                     <div class="d-flex align-items-center justify-content-between small">
-                        <div class="text-muted">Copyright &copy; E-Marke Pro 2024</div>
+                        <div class="text-muted">Copyright &copy; E-Market Pro 2024</div>
                         <div>
                             <a href="#">Privacy Policy</a>
                             &middot;

@@ -1,4 +1,6 @@
 <?php
+session_start(); // Iniciar la sesión
+
 // Paso 1: Obtener los datos del usuario desde la API
 $curl = curl_init();
 
@@ -14,7 +16,6 @@ curl_setopt_array($curl, array(
 ));
 
 $response = curl_exec($curl);
-
 curl_close($curl);
 $data = json_decode($response, true); // Decodificar el JSON como array asociativo
 
@@ -22,6 +23,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = $_POST['username'];
     $password = $_POST['password'];
     $user_found = false;
+    $user_data = null;
 
     // Verifica si $data está definido y no está vacío
     if (isset($data) && !empty($data)) {
@@ -32,6 +34,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 // Comparar el usuario y contraseña ingresados con los datos del usuario
                 if ($user['usuario'] === $username && $user['password'] === $password) {
                     $user_found = true;
+                    $user_data = $user; // Guardar los datos del usuario encontrado
                     break; // Detiene el bucle si se encuentra un usuario válido
                 }
             }
@@ -39,6 +42,38 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     if ($user_found) {
+        // Guardar datos del usuario en la sesión
+        $_SESSION['user_data'] = $user_data;
+
+        // Obtener los accesos del perfil del usuario
+        $curl = curl_init();
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => 'http://ti.app.informaticapp.com:4186/api-ti/accesos',
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'GET',
+        ));
+        $response = curl_exec($curl);
+        curl_close($curl);
+        $accesos_data = json_decode($response, true); // Decodificar el JSON como array asociativo
+
+        // Filtrar los accesos del perfil del usuario
+        $user_accesos = array_filter($accesos_data, function ($acceso) use ($user_data) {
+            return $acceso['perfil']['id'] == $user_data['perfil']['id'];
+        });
+
+        // Guardar accesos del usuario en la sesión
+        $_SESSION['user_accesos'] = $user_accesos;
+        
+        // Imprimir los datos para depuración
+        echo '<pre>';
+        print_r($_SESSION['user_accesos']);
+        echo '</pre>';
+
         // Inicio de sesión exitoso, redirige a index.php
         header('Location: index.php');
         exit; // Detiene la ejecución del script
@@ -53,6 +88,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
