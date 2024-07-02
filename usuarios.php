@@ -186,16 +186,6 @@ $data = json_decode($response);
                                 </nav>
                             </div>
                         <?php endif; ?>
-
-                        <div class="sb-sidenav-menu-heading">Complementos</div>
-                        <a class="nav-link" href="charts.html">
-                            <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
-                            Gráficos
-                        </a>
-                        <a class="nav-link" href="tables.html">
-                            <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
-                            Tablas
-                        </a>
                     </div>
                 </div>
                 <div class="sb-sidenav-footer">
