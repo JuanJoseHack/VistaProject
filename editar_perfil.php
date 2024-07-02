@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $curl = curl_init();
 
     curl_setopt_array($curl, array(
-        CURLOPT_URL => 'ti.app.informaticapp.com:4186/api-ti/perfiles/'. $_POST['id'],
+        CURLOPT_URL => 'ti.app.informaticapp.com:4186/api-ti/perfiles/' . $_POST['id'],
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => '',
         CURLOPT_MAXREDIRS => 10,
@@ -175,8 +175,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             </a>
                             <div class="collapse" id="reportes" aria-labelledby="headingOne" data-parent="#sidenavAccordion">
                                 <nav class="sb-sidenav-menu-nested nav">
-                                    <a class="nav-link" href="layout-static.html">Lista reportes</a>
-                                    <a class="nav-link" href="layout-sidenav-light.html">Reportes Ventas </a>
+                                    <a class="nav-link" href="ListaReportes.php">Lista reportes</a>
+                                    <a class="nav-link" href="GraficoReportes.php">Reportes Ventas </a>
                                 </nav>
                             </div>
                         <?php endif; ?>
@@ -249,11 +249,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         </div>
         <div id="layoutSidenav_content">
 
-            <div class="container col-xl-12">
-                <h1 class="text-center">Actulizar Perfil</h1>
-                <form method="post" class="col-xl-8 offset-2">
+            <div class="container">
+                <h2 class="mb-4 mt-4">Actualizar Perfil</h2>
+                <form method="POST" action="">
                     <input type="hidden" name="id" value="<?= $data->id; ?>">
-                    <input type="text" name="nombre" class="form-control" value="<?= $data->nombre; ?>">
+                    <div class="form-group">
+                        <label for="password">Perfil:</label>
+                        <input type="text" name="nombre" class="form-control" value="<?= $data->nombre; ?>">
+                    </div>
                     <button type="submit" class="btn btn-success">Guardar</button>
                     <a href="perfiles.php" class="btn btn-danger">Cancelar</a>
                 </form>

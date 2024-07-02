@@ -185,8 +185,8 @@ $sucursales = obtenerDatos('http://ti.app.informaticapp.com:4186/api-ti/sucursal
                             </a>
                             <div class="collapse" id="reportes" aria-labelledby="headingOne" data-parent="#sidenavAccordion">
                                 <nav class="sb-sidenav-menu-nested nav">
-                                    <a class="nav-link" href="layout-static.html">Lista reportes</a>
-                                    <a class="nav-link" href="layout-sidenav-light.html">Reportes Ventas </a>
+                                    <a class="nav-link" href="ListaReportes.php">Lista reportes</a>
+                                    <a class="nav-link" href="GraficoReportes.php">Reportes Ventas </a>
                                 </nav>
                             </div>
                         <?php endif; ?>
@@ -260,7 +260,7 @@ $sucursales = obtenerDatos('http://ti.app.informaticapp.com:4186/api-ti/sucursal
         <div id="layoutSidenav_content">
 
             <div class="container">
-                <h2>Formulario de Usuario</h2>
+                <h2 class="mb-4 mt-4">Formulario de Usuario</h2>
                 <form method="POST" action="">
                     <div class="form-group">
                         <label for="usuario">Usuario:</label>
@@ -307,6 +307,7 @@ $sucursales = obtenerDatos('http://ti.app.informaticapp.com:4186/api-ti/sucursal
                         </select>
                     </div>
                     <button type="submit" class="btn btn-primary">Enviar</button>
+                    <a href="usuarios.php" class="btn btn-danger">Cancelar</a>
                 </form>
             </div>
 

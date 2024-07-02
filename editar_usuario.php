@@ -22,13 +22,13 @@ function tieneAcceso($modulo_id, $accesos)
     return false;
 }
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $curl = curl_init();
 
     curl_setopt_array($curl, array(
-        CURLOPT_URL => 'http://ti.app.informaticapp.com:4186/api-ti/usuarios/' . $_POST['idUsuario'],
+        CURLOPT_URL => 'ti.app.informaticapp.com:4186/api-ti/usuarios/' . $_POST['idUsuario'],
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => '',
         CURLOPT_MAXREDIRS => 10,
@@ -36,37 +36,34 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         CURLOPT_FOLLOWLOCATION => true,
         CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
         CURLOPT_CUSTOMREQUEST => 'PUT',
-        CURLOPT_POSTFIELDS => '{
-    "idUsuario": ' . $_POST['idUsuario'] . ',
-    "usuario": "' . $_POST['usuario'] . '",
-    "password": "' . $_POST['password'] . '",
-    "nombres": "' . $_POST['nombres'] . '",
-    "apellidos": "' . $_POST['apellidos'] . '",
-    "telefono": "' . $_POST['telefono'] . '",
-    "email": "' . $_POST['email'] . '",
-    "edad": "' . $_POST['edad'] . '",
-    "sucursal": {
-        "id": 2   
-    },
-    "perfil": {
-        "id": 1   
-    },
-    "estado": 1   
-}',
+        CURLOPT_POSTFIELDS => json_encode(array(
+            'idUsuario' => $_POST['idUsuario'],
+            'usuario' => $_POST['usuario'],
+            'password' => $_POST['password'],
+            'nombres' => $_POST['nombres'],
+            'apellidos' => $_POST['apellidos'],
+            'telefono' => $_POST['telefono'],
+            'email' => $_POST['email'],
+            'edad' => $_POST['edad'],
+            'sucursal' => array('id' => $_POST['id_sucursal']),
+            'perfil' => array('id' => $_POST['id_perfil']),
+            'estado' => 1
+        )),
         CURLOPT_HTTPHEADER => array(
             'Content-Type: application/json'
         ),
     ));
 
     $response = curl_exec($curl);
-
     curl_close($curl);
+
     header("Location: usuarios.php");
 } else {
 
+    // Obtener datos del usuario
     $curl = curl_init();
     curl_setopt_array($curl, array(
-        CURLOPT_URL => 'http://ti.app.informaticapp.com:4186/api-ti/usuarios' . $_GET['idUsuario'],
+        CURLOPT_URL => 'ti.app.informaticapp.com:4186/api-ti/usuarios/' . $_GET['idUsuario'],
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => '',
         CURLOPT_MAXREDIRS => 10,
@@ -77,11 +74,45 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     ));
 
     $response = curl_exec($curl);
-
     curl_close($curl);
     $data = json_decode($response);
+
+    // Obtener sucursales
+    $curl = curl_init();
+    curl_setopt_array($curl, array(
+        CURLOPT_URL => 'ti.app.informaticapp.com:4186/api-ti/sucursales',
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => '',
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 0,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => 'GET',
+    ));
+
+    $response = curl_exec($curl);
+    curl_close($curl);
+    $sucursales = json_decode($response);
+
+    // Obtener perfiles
+    $curl = curl_init();
+    curl_setopt_array($curl, array(
+        CURLOPT_URL => 'ti.app.informaticapp.com:4186/api-ti/perfiles',
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => '',
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 0,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => 'GET',
+    ));
+
+    $response = curl_exec($curl);
+    curl_close($curl);
+    $perfiles = json_decode($response);
 }
 ?>
+
 
 
 <!DOCTYPE html>
@@ -189,8 +220,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             </a>
                             <div class="collapse" id="reportes" aria-labelledby="headingOne" data-parent="#sidenavAccordion">
                                 <nav class="sb-sidenav-menu-nested nav">
-                                    <a class="nav-link" href="layout-static.html">Lista reportes</a>
-                                    <a class="nav-link" href="layout-sidenav-light.html">Reportes Ventas </a>
+                                    <a class="nav-link" href="ListaReportes.php">Lista reportes</a>
+                                    <a class="nav-link" href="GraficoReportes.php">Reportes Ventas </a>
                                 </nav>
                             </div>
                         <?php endif; ?>
@@ -263,27 +294,58 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         </div>
         <div id="layoutSidenav_content">
 
-            <div class="container col-xl-12">
-                <h1 class="text-center">Actulizar Usuario</h1>
-                <form method="post" class="col-xl-8 offset-2">
+            <div class="container">
+                <h2 class="mb-4 mt-4">Actualizar Usuario</h2>
+                <form method="POST" action="">
                     <input type="hidden" name="idUsuario" value="<?= $data->idUsuario; ?>">
-                    <input type="text" name="usuario" class="form-control" value="<?= $data->usuario; ?>">
-                    <input type="password" name="password" class="form-control" value="<?= $data->password; ?>">
-                    <input type="text" name="nombres" class="form-control" value="<?= $data->nombres; ?>">
-                    <input type="text" name="apellidos" class="form-control" value="<?= $data->apellidos; ?>">
-                    <input type="text" name="telefono" class="form-control" value="<?= $data->telefono; ?>">
-                    <input type="email" name="email" class="form-control" value="<?= $data->email; ?>">
-                    <input type="number" name="edad" class="form-control" value="<?= $data->edad; ?>">
-                    <select class="form-control" name="id_sucursal" required>
-                        <?php foreach ($sucursales as $sucursal) : ?>
-                            <option value="<?php echo $sucursal['id']; ?>"><?php echo $sucursal['nombre']; ?></option>
-                        <?php endforeach; ?>
-                    </select>
-                    <select class="form-control" name="id_perfil" required>
-                        <?php foreach ($perfiles as $perfil) : ?>
-                            <option value="<?php echo $perfil['id']; ?>"><?php echo $perfil['nombre']; ?></option>
-                        <?php endforeach; ?>
-                    </select>
+                    <div class="form-group">
+                        <label for="usuario">Usuario:</label>
+                        <input type="text" name="usuario" class="form-control" value="<?= $data->usuario; ?>">
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Contraseña:</label>
+                        <input type="text" name="password" class="form-control" value="<?= $data->password; ?>">
+                    </div>
+                    <div class="form-group">
+                        <label for="nombres">Nombres:</label>
+                        <input type="text" name="nombres" class="form-control" value="<?= $data->nombres; ?>">
+                    </div>
+                    <div class="form-group">
+                        <label for="apellidos">Apellidos:</label>
+                        <input type="text" name="apellidos" class="form-control" value="<?= $data->apellidos; ?>">
+                    </div>
+                    <div class="form-group">
+                        <label for="telefono">Teléfono:</label>
+                        <input type="text" name="telefono" class="form-control" value="<?= $data->telefono; ?>">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email:</label>
+                        <input type="email" name="email" class="form-control" value="<?= $data->email; ?>">
+                    </div>
+                    <div class="form-group">
+                        <label for="edad">Edad:</label>
+                        <input type="number" name="edad" class="form-control" value="<?= $data->edad; ?>">
+                    </div>
+                    <div class="form-group">
+                        <label for="sucursal">Sucursal:</label>
+                        <select class="form-control" name="id_sucursal" required>
+                            <?php foreach ($sucursales as $sucursal) : ?>
+                                <option value="<?php echo $sucursal->id; ?>" <?php if ($data->sucursal->id == $sucursal->id) echo 'selected'; ?>>
+                                    <?php echo $sucursal->nombre; ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="perfil">Perfil:</label>
+                        <select class="form-control" name="id_perfil" required>
+                            <?php foreach ($perfiles as $perfil) : ?>
+                                <option value="<?php echo $perfil->id; ?>" <?php if ($data->perfil->id == $perfil->id) echo 'selected'; ?>>
+                                    <?php echo $perfil->nombre; ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
 
                     <button type="submit" class="btn btn-success">Guardar</button>
                     <a href="usuarios.php" class="btn btn-danger">Cancelar</a>

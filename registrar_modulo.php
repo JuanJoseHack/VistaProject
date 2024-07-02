@@ -156,8 +156,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             </a>
                             <div class="collapse" id="reportes" aria-labelledby="headingOne" data-parent="#sidenavAccordion">
                                 <nav class="sb-sidenav-menu-nested nav">
-                                    <a class="nav-link" href="layout-static.html">Lista reportes</a>
-                                    <a class="nav-link" href="layout-sidenav-light.html">Reportes Ventas </a>
+                                    <a class="nav-link" href="ListaReportes.php">Lista reportes</a>
+                                    <a class="nav-link" href="GraficoReportes.php">Reportes Ventas </a>
                                 </nav>
                             </div>
                         <?php endif; ?>
@@ -230,17 +230,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </div>
         <div id="layoutSidenav_content">
 
-            <div class="container col-xl-12">
-                <h1 class="text-center mb-4 mt-4">Registrar Modulos</h1>
-                <div class="container">
-                    <form method="post" class="col-xl-5 offset-4 border p-3">
-                        <div class="form-group">
-                            <input type="text" name="nombre" placeholder="Nombre del modulo" class="form-control mb-2">
-                        </div>
-                        <button type="submit" class="btn btn-success">Guardar</button>
-                        <a href="modulos.php" class="btn btn-danger">Cancelar</a>
-                    </form>
-                </div>
+            <div class="container">
+                <h2 class="mb-4 mt-4">Formulario de Modulo</h2>
+                <form method="POST" action="">
+                    <div class="form-group">
+                    <label for="usuario">Modulo:</label>
+                        <input type="text" name="nombre" placeholder="Nombre del modulo" class="form-control mb-2">
+                    </div>
+                    <button type="submit" class="btn btn-success">Guardar</button>
+                    <a href="modulos.php" class="btn btn-danger">Cancelar</a>
+                </form>
+
             </div>
         </div>
     </div>

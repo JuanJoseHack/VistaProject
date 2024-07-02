@@ -176,8 +176,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             </a>
                             <div class="collapse" id="reportes" aria-labelledby="headingOne" data-parent="#sidenavAccordion">
                                 <nav class="sb-sidenav-menu-nested nav">
-                                    <a class="nav-link" href="layout-static.html">Lista reportes</a>
-                                    <a class="nav-link" href="layout-sidenav-light.html">Reportes Ventas </a>
+                                    <a class="nav-link" href="ListaReportes.php">Lista reportes</a>
+                                    <a class="nav-link" href="GraficoReportes.php">Reportes Ventas </a>
                                 </nav>
                             </div>
                         <?php endif; ?>
@@ -250,11 +250,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         </div>
         <div id="layoutSidenav_content">
 
-            <div class="container col-xl-12">
-                <h1 class="text-center">Actulizar Modulo</h1>
-                <form method="post" class="col-xl-8 offset-2">
+            <div class="container">
+                <h2 class="mb-4 mt-4">Actualizar Modulo</h2>
+                <form method="POST" action="">
                     <input type="hidden" name="id" value="<?= $data->id; ?>">
-                    <input type="text" name="nombre" class="form-control" value="<?= $data->nombre; ?>">
+                    <div class="form-group">
+                        <label for="password">Modulo:</label>
+                        <input type="text" name="nombre" class="form-control" value="<?= $data->nombre; ?>">
+                    </div>
                     <button type="submit" class="btn btn-success">Guardar</button>
                     <a href="modulos.php" class="btn btn-danger">Cancelar</a>
                 </form>

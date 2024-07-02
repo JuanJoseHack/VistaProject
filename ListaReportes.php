@@ -23,23 +23,34 @@ function tieneAcceso($modulo_id, $accesos)
 }
 
 
-$curl = curl_init();
+// Función para obtener los datos de la API de ventas
+function obtenerDatosVentas()
+{
+    $curl = curl_init();
 
-curl_setopt_array($curl, array(
-    CURLOPT_URL => 'ti.app.informaticapp.com:4186/api-ti/modulos',
-    CURLOPT_RETURNTRANSFER => true,
-    CURLOPT_ENCODING => '',
-    CURLOPT_MAXREDIRS => 10,
-    CURLOPT_TIMEOUT => 0,
-    CURLOPT_FOLLOWLOCATION => true,
-    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-    CURLOPT_CUSTOMREQUEST => 'GET',
-));
+    curl_setopt_array($curl, array(
+        CURLOPT_URL => 'http://ti.app.informaticapp.com:4186/api-ti/ventas',
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => '',
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 0,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => 'GET',
+        CURLOPT_HTTPHEADER => array(
+            'Content-Type: application/json'
+        ),
+    ));
 
-$response = curl_exec($curl);
+    $response = curl_exec($curl);
 
-curl_close($curl);
-$data = json_decode($response);
+    curl_close($curl);
+
+    return json_decode($response); // Decodificar la respuesta JSON y devolverla como objeto
+}
+
+// Obtener los datos de ventas desde la API
+$data = obtenerDatosVentas();
 
 ?>
 
@@ -47,15 +58,41 @@ $data = json_decode($response);
 <html lang="en">
 
 <head>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <meta name="description" content="" />
-    <meta name="author" content="" />
-    <title>Dashboard</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tabla de Ventas</title>
     <link href="Css/Style.css" rel="stylesheet" />
-    <link href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css" rel="stylesheet" crossorigin="anonymous" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/js/all.min.js" crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.24/js/dataTables.bootstrap4.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.0/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.70/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.70/vfs_fonts.js"></script>
+    <style>
+        .modal-content {
+            padding: 20px;
+        }
+
+        .filter-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .filter-container>div {
+            margin-right: 30px;
+        }
+
+        #filtrarSucursal,
+        #filtrarFecha {
+            width: auto;
+        }
+    </style>
 </head>
 
 <body class="sb-nav-fixed">
@@ -222,31 +259,188 @@ $data = json_decode($response);
         </div>
         <div id="layoutSidenav_content">
 
-            <div class="container col-xl-12">
-                <h1 class="mb-5 mt-4">Modulos</h1>
-                <a href="registrar_modulo.php" class="btn btn-primary mb-3">Registrar Modulo</a>
-                <table class="table">
-                    <thead class="thead-light">
+            <div class="container">
+                <h2 class="my-4">Tabla de Ventas</h2>
+
+                <div class="filter-container">
+                    <div class="form-group">
+                        <label for="filtrarSucursal">Filtrar por Sucursal:</label>
+                        <select id="filtrarSucursal" class="form-control">
+                            <option value="">Todas las Sucursales</option>
+                            <?php
+                            $sucursales = [];
+                            foreach ($data as $venta) {
+                                $sucursales[$venta->sucursal->id] = $venta->sucursal->nombre;
+                            }
+                            foreach ($sucursales as $id => $nombre) {
+                                echo "<option value='$nombre'>$nombre</option>";
+                            }
+                            ?>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="filtrarFecha">Filtrar por Fecha:</label>
+                        <input type="date" id="filtrarFecha" class="form-control">
+                    </div>
+                </div>
+
+                <button id="btnExportExcel" class="btn btn-success mb-3"><i class="fas fa-file-excel"></i> Descargar Excel</button>
+                <a href="GraficoReportes.php" class="btn btn-primary mb-3"><i></i> Regresar</a>
+
+                <table id="tablaVentas" class="table table-bordered table-hover">
+                    <thead class="thead-dark">
                         <tr>
-                            <th scope="col">Nombre</th>
-                            <th scope="col" colspan="2">Operaciones</th>
+                            <th>ID</th>
+                            <th>Fecha</th>
+                            <th>Cliente</th>
+                            <th>Email</th>
+                            <th>Dirección</th>
+                            <th>Teléfono</th>
+                            <th>Sucursal</th>
+                            <th>Representante Sucursal</th>
+                            <th>País</th>
+                            <th>Región</th>
+                            <th>Provincia</th>
+                            <th>Distrito</th>
+                            <th>Dirección Sucursal</th>
+                            <th>Producto</th>
+                            <th>Cantidad</th>
+                            <th>Precio</th>
+                            <th>Tipo de Pago</th>
+                            <th>Total</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach ($data as $item) : ?>
-                            <tr>
-                                <td><?php print $item->nombre ?></td>
-                                <td><a href="editar_modulo.php?id=<?= $item->id ?>" class="btn btn-warning">Editar</a></td>
-                                <td><a href="eliminar_modulo.php?id=<?= $item->id ?>" class="btn btn-danger">Eliminar</a></td>
-                            </tr>
-                        <?php endforeach ?>
+                        <?php
+                        // Iterar sobre cada venta
+                        foreach ($data as $venta) {
+                            echo '<tr>';
+                            echo '<td>' . $venta->id . '</td>';
+                            echo '<td>' . date('d/m/Y', strtotime($venta->fecha)) . '</td>';
+                            echo '<td><a href="#" data-toggle="modal" data-target="#clienteModal' . $venta->cliente->id . '">' . $venta->cliente->nombre . ' ' . $venta->cliente->apellido . '</a></td>';
+                            echo '<td>' . $venta->cliente->email . '</td>';
+                            echo '<td>' . $venta->cliente->direccion . '</td>';
+                            echo '<td>' . $venta->cliente->telefono . '</td>';
+                            echo '<td>' . $venta->sucursal->nombre . '</td>';
+                            echo '<td>' . $venta->sucursal->representante . '</td>';
+                            echo '<td>' . $venta->sucursal->lugar->pais . '</td>';
+                            echo '<td>' . $venta->sucursal->lugar->region . '</td>';
+                            echo '<td>' . $venta->sucursal->lugar->provincia . '</td>';
+                            echo '<td>' . $venta->sucursal->lugar->distrito . '</td>';
+                            echo '<td>' . $venta->sucursal->lugar->direccionEspecifica . '</td>';
+                            // Mostrar detalles del producto
+                            foreach ($venta->detalles as $detalle) {
+                                echo '<td>' . $detalle->producto->nombre . '</td>';
+                                echo '<td>' . $detalle->cantidad . '</td>'; // Mostrar la cantidad comprada
+                                echo '<td>' . $detalle->subtotal . '</td>'; // Mostrar el precio subtotal del producto
+                            }
+                            echo '<td>' . $venta->tipoPago . '</td>';
+                            echo '<td>' . $venta->total . '</td>';
+                            echo '</tr>';
+
+                            // Modal para detalles del cliente y productos comprados
+                            echo '<div class="modal fade" id="clienteModal' . $venta->cliente->id . '" tabindex="-1" role="dialog" aria-labelledby="clienteModalLabel' . $venta->cliente->id . '" aria-hidden="true">';
+                            echo '<div class="modal-dialog modal-lg" role="document">';
+                            echo '<div class="modal-content">';
+                            echo '<div class="modal-header">';
+                            echo '<h5 class="modal-title" id="clienteModalLabel' . $venta->cliente->id . '">' . $venta->cliente->nombre . ' ' . $venta->cliente->apellido . '</h5>';
+                            echo '<button type="button" class="close" data-dismiss="modal" aria-label="Close">';
+                            echo '<span aria-hidden="true">&times;</span>';
+                            echo '</button>';
+                            echo '</div>';
+                            echo '<div class="modal-body">';
+                            echo '<p><strong>Email:</strong> ' . $venta->cliente->email . '</p>';
+                            echo '<p><strong>Dirección:</strong> ' . $venta->cliente->direccion . '</p>';
+                            echo '<p><strong>Teléfono:</strong> ' . $venta->cliente->telefono . '</p>';
+                            echo '<p><strong>Total Gastado:</strong> $' . $venta->total . '</p>'; // Mostrar el total gastado por el cliente
+                            echo '<p><strong>Productos Comprados:</strong></p>';
+                            echo '<ul>';
+                            foreach ($venta->detalles as $detalle) {
+                                echo '<li>' . $detalle->producto->nombre . ' - Cantidad: ' . $detalle->cantidad . '</li>';
+                            }
+                            echo '</ul>';
+                            echo '</div>';
+                            echo '<div class="modal-footer">';
+                            echo '<button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>';
+                            // Botón para descargar en PDF
+                            echo '<button type="button" class="btn btn-danger" onclick="exportarPDF(' . $venta->cliente->id . ')"><i class="fas fa-file-pdf"></i> Descargar PDF</button>';
+                            echo '</div>';
+                            echo '</div>';
+                            echo '</div>';
+                            echo '</div>';
+                        }
+                        ?>
                     </tbody>
                 </table>
 
             </div>
 
+            <script>
+                $(document).ready(function() {
+                    // Inicializar DataTables
+                    var table = $('#tablaVentas').DataTable({
+                        "language": {
+                            "url": "//cdn.datatables.net/plug-ins/1.10.24/i18n/Spanish.json"
+                        }
+                    });
+
+                    // Filtrar por sucursal
+                    $('#filtrarSucursal').on('change', function() {
+                        var sucursal = $(this).val();
+                        table.columns(6).search(sucursal).draw();
+                    });
+
+                    // Filtrar por fecha
+                    $('#filtrarFecha').on('change', function() {
+                        table.draw();
+                    });
+
+                    $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
+                        var fechaFiltro = $('#filtrarFecha').val();
+                        var fechaVenta = data[1].split('/').reverse().join('-'); // Convertir fecha a formato YYYY-MM-DD
+
+                        if (fechaFiltro === "" || fechaVenta === fechaFiltro) {
+                            return true;
+                        }
+                        return false;
+                    });
+
+                    // Exportar a Excel
+                    $('#btnExportExcel').on('click', function() {
+                        var wb = XLSX.utils.table_to_book(document.getElementById('tablaVentas'), {
+                            sheet: "Ventas"
+                        });
+                        return XLSX.writeFile(wb, 'ventas.xlsx');
+                    });
+                });
+
+                // Función para exportar a PDF desde el modal del cliente
+                function exportarPDF(clienteId) {
+                    var pdfContent = document.getElementById('clienteModal' + clienteId).innerHTML;
+                    var docDefinition = {
+                        content: [{
+                                text: 'Detalles del Cliente y Productos Comprados',
+                                style: 'header'
+                            },
+                            {
+                                text: pdfContent
+                            }
+                        ],
+                        styles: {
+                            header: {
+                                fontSize: 18,
+                                bold: true,
+                                margin: [0, 0, 0, 10]
+                            }
+                        }
+                    };
+                    pdfMake.createPdf(docDefinition).download('detalle_cliente.pdf');
+                }
+            </script>
+
             <!-- Footer -->
-            <footer class="py-4 bg-light mt-auto">
+            <footer class="py-4 bg-light mt-3 mb-3">
                 <div class="container-fluid">
                     <div class="d-flex align-items-center justify-content-between small">
                         <div class="text-muted">Copyright &copy; E-Marke Pro 2024</div>
@@ -258,13 +452,10 @@ $data = json_decode($response);
                     </div>
                 </div>
             </footer>
-        </div>
-    </div>
 
-    <!-- JS, Popper.js, and jQuery -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+        </div>
+
+
 </body>
 
 </html>

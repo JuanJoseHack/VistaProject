@@ -25,14 +25,14 @@ function tieneAcceso($modulo_id, $accesos)
 $curl = curl_init();
 
 curl_setopt_array($curl, array(
-  CURLOPT_URL => 'http://ti.app.informaticapp.com:4186/api-ti/usuarios',
-  CURLOPT_RETURNTRANSFER => true,
-  CURLOPT_ENCODING => '',
-  CURLOPT_MAXREDIRS => 10,
-  CURLOPT_TIMEOUT => 0,
-  CURLOPT_FOLLOWLOCATION => true,
-  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-  CURLOPT_CUSTOMREQUEST => 'GET',
+    CURLOPT_URL => 'http://ti.app.informaticapp.com:4186/api-ti/usuarios',
+    CURLOPT_RETURNTRANSFER => true,
+    CURLOPT_ENCODING => '',
+    CURLOPT_MAXREDIRS => 10,
+    CURLOPT_TIMEOUT => 0,
+    CURLOPT_FOLLOWLOCATION => true,
+    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+    CURLOPT_CUSTOMREQUEST => 'GET',
 ));
 
 $response = curl_exec($curl);
@@ -147,8 +147,8 @@ $data = json_decode($response);
                             </a>
                             <div class="collapse" id="reportes" aria-labelledby="headingOne" data-parent="#sidenavAccordion">
                                 <nav class="sb-sidenav-menu-nested nav">
-                                    <a class="nav-link" href="layout-static.html">Lista reportes</a>
-                                    <a class="nav-link" href="layout-sidenav-light.html">Reportes Ventas </a>
+                                    <a class="nav-link" href="ListaReportes.php">Lista reportes</a>
+                                    <a class="nav-link" href="GraficoReportes.php">Reportes Ventas </a>
                                 </nav>
                             </div>
                         <?php endif; ?>
@@ -251,8 +251,8 @@ $data = json_decode($response);
                                 <td><?php print $item->edad ?></td>
                                 <td><?php echo isset($item->sucursal->nombre) ? $item->sucursal->nombre : "Perfil no disponible"; ?></td>
                                 <td><?php echo isset($item->perfil->nombre) ? $item->perfil->nombre : "Perfil no disponible"; ?></td>
-                                <td><a href="editar_usuario.php?idUsuario=<?= $item->idUsuario?>" class="btn btn-warning">Editar</a></td>
-                                <td><a href="eliminar_usuario.php?idUsuario=<?= $item->idUsuario?>" class="btn btn-danger">Eliminar</a></td>
+                                <td><a href="editar_usuario.php?idUsuario=<?= $item->idUsuario ?>" class="btn btn-warning">Editar</a></td>
+                                <td><a href="eliminar_usuario.php?idUsuario=<?= $item->idUsuario ?>" class="btn btn-danger">Eliminar</a></td>
                             </tr>
                         <?php endforeach ?>
                     </tbody>
