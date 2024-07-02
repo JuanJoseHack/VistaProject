@@ -26,11 +26,11 @@
 </head>
 
 <body class="sb-nav-fixed">
-   <!-- Navbar -->
-  <?php include('../componentes/navbar.php')?>
-  <div id="layoutSidenav">
-    <!-- layout -->
-  <?php include('../componentes/layout.php')?>
+    <!-- Navbar -->
+    <?php include ('../componentes/navbar.php') ?>
+    <div id="layoutSidenav">
+        <!-- layout -->
+        <?php include ('../componentes/layout.php') ?>
 
         <div id="layoutSidenav_content">
             <div class="container col-xl-12">
@@ -103,7 +103,7 @@
                                         <th>Producto</th>
                                         <th>Cantidad</th>
                                         <th>Precio</th>
-                                        <th>Accion</th>
+                                        <th>Total</th>
                                     </tr>
                                 </thead>
                                 <tbody id="dataDetalleCompraItems"></tbody>
@@ -157,7 +157,7 @@
                                             <th>Producto</th>
                                             <th>Cantidad</th>
                                             <th>Precio</th>
-                                            <th>Accion</th>
+                                            <th>Total</th>
                                         </tr>
                                     </thead>
                                     <tbody id="dataProducts">
@@ -172,7 +172,7 @@
                                             <th>Producto</th>
                                             <th>Cantidad</th>
                                             <th>Precio</th>
-                                            <th>Accion</th>
+                                            <th>Total</th>
                                         </tr>
                                     </thead>
                                     <tbody id="dataCartProducts"></tbody>
