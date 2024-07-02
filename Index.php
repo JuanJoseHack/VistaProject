@@ -59,9 +59,6 @@ $nombre_usuario = isset($user_data['nombres']) ? $user_data['nombres'] : 'Invita
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" id="userDropdown" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
-                    <a class="dropdown-item" href="#">Configuración</a>
-                    <a class="dropdown-item" href="#">Perfiles</a>
-                    <div class="dropdown-divider"></div>
                     <a class="dropdown-item" href="login.php">Cerrar Sesión</a>
                 </div>
             </li>
@@ -185,10 +182,6 @@ $nombre_usuario = isset($user_data['nombres']) ? $user_data['nombres'] : 'Invita
                     <ol class="breadcrumb mb-4 mt-4">
                         <li class="breadcrumb-item active">Dashboard <?php echo htmlspecialchars($perfil_nombre); ?></li>
                     </ol>
-                </div>
-
-                <div class="row">
-                    <img src="pages/OIP.jpeg" alt="">
                 </div>
             </main>
             <footer class="py-4 bg-light mt-auto">

@@ -48,7 +48,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Obtener los accesos del perfil del usuario
         $curl = curl_init();
         curl_setopt_array($curl, array(
-            CURLOPT_URL => 'http://ti.app.informaticapp.com:4188/api-ti/accesos',
+            CURLOPT_URL => 'http://ti.app.informaticapp.com:4189/api-ti/accesos',
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,

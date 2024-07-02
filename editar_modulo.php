@@ -22,7 +22,8 @@ function tieneAcceso($modulo_id, $accesos)
     return false;
 }
 
-
+// Obtener el nombre del usuario
+$nombre_usuario = isset($user_data['nombres']) ? $user_data['nombres'] : 'Invitado';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
@@ -218,7 +219,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     </div>
                 </div>
                 <div class="sb-sidenav-footer">
-                    <div class="small">BIENVENIDO</div>
+                    <div class="small"><?php echo htmlspecialchars($nombre_usuario); ?></div>
                 </div>
             </nav>
         </div>

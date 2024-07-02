@@ -22,6 +22,9 @@ function tieneAcceso($modulo_id, $accesos)
     return false;
 }
 
+// Obtener el nombre del usuario
+$nombre_usuario = isset($user_data['nombres']) ? $user_data['nombres'] : 'Invitado';
+
 
 // Función para obtener datos desde una URL usando cURL
 function getData($url)
@@ -157,9 +160,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" id="userDropdown" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
-                    <a class="dropdown-item" href="#">Configuración</a>
-                    <a class="dropdown-item" href="#">Perfiles</a>
-                    <div class="dropdown-divider"></div>
                     <a class="dropdown-item" href="login.php">Cerrar Sesión</a>
                 </div>
             </li>
@@ -273,7 +273,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                 </div>
                 <div class="sb-sidenav-footer">
-                    <div class="small">BIENVENIDO</div>
+                    <div class="small"><?php echo htmlspecialchars($nombre_usuario); ?></div>
                 </div>
             </nav>
         </div>

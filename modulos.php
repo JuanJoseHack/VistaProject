@@ -23,6 +23,9 @@ function tieneAcceso($modulo_id, $accesos)
 }
 
 
+// Obtener el nombre del usuario
+$nombre_usuario = isset($user_data['nombres']) ? $user_data['nombres'] : 'Invitado';
+
 $curl = curl_init();
 
 curl_setopt_array($curl, array(
@@ -190,7 +193,7 @@ $data = json_decode($response);
                     </div>
                 </div>
                 <div class="sb-sidenav-footer">
-                    <div class="small">BIENVENIDO</div>
+                    <div class="small"><?php echo htmlspecialchars($nombre_usuario); ?></div>
                 </div>
             </nav>
         </div>
