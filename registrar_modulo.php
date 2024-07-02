@@ -170,28 +170,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             </a>
                             <div class="collapse" id="collapsePages" aria-labelledby="headingTwo" data-parent="#sidenavAccordion">
                                 <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
-                                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#pagesCollapseAuth" aria-expanded="false" aria-controls="pagesCollapseAuth">
+                                    <a class="nav-link" href="pages/compras.php">
                                         Lista Compras
-                                        <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                                     </a>
-                                    <div class="collapse" id="pagesCollapseAuth" aria-labelledby="headingOne" data-parent="#sidenavAccordionPages">
-                                        <nav class="sb-sidenav-menu-nested nav">
-                                            <a class="nav-link" href="pages/compras.php">Registar compra</a>
-                                            <a class="nav-link" href="#">Compras</a>
-                                            <a class="nav-link" href="#">Detalles Compras</a>
-                                        </nav>
-                                    </div>
-                                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#pagesCollapseError" aria-expanded="false" aria-controls="pagesCollapseError">
+                                    <a class="nav-link" href="pages/proveedores.php">
                                         Proveedores
-                                        <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                                     </a>
-
-                                    <div class="collapse" id="pagesCollapseError" aria-labelledby="headingOne" data-parent="#sidenavAccordionPages">
-                                        <nav class="sb-sidenav-menu-nested nav">
-                                            <a class="nav-link" href="401.html">Registrar Proveedor</a>
-                                            <a class="nav-link" href="404.html">Proveedores</a>
-                                        </nav>
-                                    </div>
                                 </nav>
                             </div>
                         <?php endif; ?>
@@ -234,7 +218,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <h2 class="mb-4 mt-4">Formulario de Modulo</h2>
                 <form method="POST" action="">
                     <div class="form-group">
-                    <label for="usuario">Modulo:</label>
+                        <label for="usuario">Modulo:</label>
                         <input type="text" name="nombre" placeholder="Nombre del modulo" class="form-control mb-2">
                     </div>
                     <button type="submit" class="btn btn-success">Guardar</button>
