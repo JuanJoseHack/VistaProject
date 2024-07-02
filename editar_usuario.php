@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $curl = curl_init();
 
     curl_setopt_array($curl, array(
-        CURLOPT_URL => 'ti.app.informaticapp.com:4188/api-ti/usuarios/' . $_POST['idUsuario'],
+        CURLOPT_URL => 'ti.app.informaticapp.com:4189/api-ti/usuarios/' . $_POST['idUsuario'],
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => '',
         CURLOPT_MAXREDIRS => 10,
@@ -63,7 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Obtener datos del usuario
     $curl = curl_init();
     curl_setopt_array($curl, array(
-        CURLOPT_URL => 'ti.app.informaticapp.com:4188/api-ti/usuarios/' . $_GET['idUsuario'],
+        CURLOPT_URL => 'ti.app.informaticapp.com:4189/api-ti/usuarios/' . $_GET['idUsuario'],
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => '',
         CURLOPT_MAXREDIRS => 10,
@@ -80,7 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Obtener sucursales
     $curl = curl_init();
     curl_setopt_array($curl, array(
-        CURLOPT_URL => 'ti.app.informaticapp.com:4188/api-ti/sucursales',
+        CURLOPT_URL => 'ti.app.informaticapp.com:4189/api-ti/sucursales',
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => '',
         CURLOPT_MAXREDIRS => 10,
@@ -97,7 +97,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Obtener perfiles
     $curl = curl_init();
     curl_setopt_array($curl, array(
-        CURLOPT_URL => 'ti.app.informaticapp.com:4188/api-ti/perfiles',
+        CURLOPT_URL => 'ti.app.informaticapp.com:4189/api-ti/perfiles',
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => '',
         CURLOPT_MAXREDIRS => 10,

@@ -147,10 +147,10 @@ $nombre_usuario = isset($user_data['nombres']) ? $user_data['nombres'] : 'Invita
                             </a>
                             <div class="collapse" id="collapsePages" aria-labelledby="headingTwo" data-parent="#sidenavAccordion">
                                 <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
-                                    <a class="nav-link" href="pages/compras.php">
+                                    <a class="nav-link" href="compras.php">
                                         Lista Compras
                                     </a>
-                                    <a class="nav-link" href="pages/proveedores.php">
+                                    <a class="nav-link" href="proveedores.php">
                                         Proveedores
                                     </a>
                                 </nav>
